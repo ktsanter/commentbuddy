@@ -7,7 +7,7 @@ var selectIndex = {
 };
 
 $(document).ready(function() {
-  loadData();
+  loadData($("#filename").html().trim());
     
   $("#selPrimary").change(function() {
      handlePrimaryChange();
@@ -20,53 +20,28 @@ $(document).ready(function() {
   $("#selComment").change(function() {
      handleCommentChange();
   });
-  
-  $("#inpFile").change(function() {
-    handleCommentFileNameChange(this)
-   });
 });
 
-function getCommentFileName() {
-/*
-  var fname = '';
-  chrome.storage.sync.get(['commentFileName'], function(items) {
-    if (typeof items.fileName != 'undefined') {
-      fname = items.commentFileName;
-    }
-  });
-
-  return fname;
-*/ 
-  return 'commentbuddy.tsv';
-}
-
-function storeCommentFileName(fname) {
-  chrome.storage.sync.set(
-    {"commentFileName": fname}, function() {}
-  );
-}
-
-function loadData() {
-  var fileName = getCommentFileName();
-  if (fileName === '') {
-    return;
-  }
-
+function loadData(filename) {
+  console.log('loadData...');
+  var commentURL = chrome.runtime.getURL(filename);
+  console.log('made URL...');
   $.ajax({
-    url: chrome.runtime.getURL(fileName),
+    url: commentURL,
     dataType: "text",
     success: function(data) {
+      console.log('read data...');
       commentData = parseCommentData(data);
       initializeSelectIndices();
     },
     error: function() {
-      showError('unable to load from comment data file: "' + fileName + '"');
+      showError('unable to load from comment data file "' + filename + '"');
     }
   });
 }
 
 function initializeSelectIndices() {
-  chrome.storage.sync.get(['primaryIndex', 'secondaryIndex', 'commentIndex'], function(items) {
+  chrome.storage.local.get(['primaryIndex', 'secondaryIndex', 'commentIndex'], function(items) {
     selectIndex.primary = 0;
     selectIndex.secondary = 0;
     selectIndex.comment = 0;
@@ -99,7 +74,7 @@ function initializeSelectIndices() {
 }
 
 function saveSelectIndices() {
-  chrome.storage.sync.set(
+  chrome.storage.local.set(
     {
       "primaryIndex": selectIndex.primary, 
       "secondaryIndex": selectIndex.secondary,
@@ -213,9 +188,4 @@ function copyTextToClipboard(text) {
 
 function showError(strError) {
   $("#spanError").html('<b> Error - ' + strError + '</b>');
-}
-
-function handleCommentFileNameChange(elem) {
-  console.log('filenamechange: ');
-  console.log('value=' + elem.files[0]);
 }

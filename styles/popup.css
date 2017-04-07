@@ -40,21 +40,16 @@ td {
 }
 
 .tdLabel {
-  width: 15%
+  width: 10%;
   font-family: arial;
   font-size: 13px;
+  padding-top: 3px;
 }
 
 .tdData {
   width: 85%;
 }
 
-.inpText {
-  background-color: yellow;
-  color: blue;
-  width: 100%;
-}
-
-.file-chooser {
-  margin:5px 0 5px 0;
+.hide-me {
+  display:none;
 }
