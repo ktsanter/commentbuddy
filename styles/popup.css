@@ -1,0 +1,56 @@
+body {
+  overflow-x: scroll;
+  width: 600px;
+  height: 400px;
+  margin:0;
+  padding:0;
+  color: #185A6A;
+  background-color: #EAEAEA;
+}
+
+.title {
+  color: #EAEAEA;
+  background-color: #185A6A;
+  border-style: solid;
+  border-color: #EAEAEA;
+  border-width: 1px;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+select {
+  overflow-x: scroll;
+  overflow-y: auto;
+  font-family: arial;
+  font-size: 13px;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  height: 100%;
+}
+
+.trDropDown {
+  height: 8%;
+}
+
+td {
+  vertical-align: top;
+}
+
+.tdLabel {
+  width: 15%
+  font-family: arial;
+  font-size: 13px;
+}
+
+.tdData {
+  width: 85%;
+}
+
+.inpText {
+  background-color: yellow;
+  color: blue;
+  width: 100%;
+}
