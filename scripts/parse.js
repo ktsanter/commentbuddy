@@ -1,29 +1,26 @@
+"use strict";
 function parseCommentData(data) {
   var parsedData = [];
-  var phead = 'A)';
-  var shead = 'B)';
-  var chead = 'C)';
-  var clean = data.replace(/\t/gi, '');
-  var lines = clean.split('\n');
+  var line = data.split('\n');
   var pcount = 0;
   var scount = 0;
+  
+  for (var i = 1; i < line.length; i++) {
+    var splitline = line[i].split('\t');
       
-  for (var i = 0; i < lines.length; i++) {
-    var head = lines[i].substr(0,2);
-    var text = (lines[i].substr(2)).trim();
-        
-    if (head == phead) {
+    if (splitline[0] !== '') {
       pcount++;
       scount = 0;
-      parsedData.push([text]);
+      parsedData.push([splitline[0]]);
   
-    } else if (head == shead) {
+    } else if (splitline[1] !== '') {
       scount++;
-      parsedData[pcount-1].push([text, []]);
+      parsedData[pcount-1].push([splitline[1], []]);
           
-    } else if (head == chead) {
+    } else if (splitline[2] !== '') {
       var p = parsedData[pcount-1];
       var s = p[scount];
+      var text = splitline[2];
       s[1].push(text);
     }
   }

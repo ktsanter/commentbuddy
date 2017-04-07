@@ -1,3 +1,4 @@
+"use strict";
 var commentData;
 var selectIndex = {
   "primary": 0,
@@ -6,7 +7,8 @@ var selectIndex = {
 };
 
 $(document).ready(function() {
-  loadData(chrome.runtime.getURL("./myComments.txt"));
+  // get file name from sync store
+  loadData(chrome.runtime.getURL("commentbuddy.tsv"));
     
   $("#selPrimary").change(function() {
      handlePrimaryChange();
@@ -37,17 +39,38 @@ function loadData(myURL) {
           selectIndex.primary = items.primaryIndex;
           selectIndex.secondary = items.secondaryIndex;
           selectIndex.comment = items.commentIndex;
-        } else {
-          saveSelectIndices();
         }
-    
+        console.log('A');
+        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
+        if (selectIndex.primary >= getNumPrimaryCategories(commentData)) {
+            selectIndex.primary = 0;
+            selectIndex.secondary = 0;
+            selectIndex.comment = 0
+        }
+        console.log('B');
+        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
+        if (selectIndex.secondary >= getNumSecondaryCategories(commentData, selectIndex.primary)) {
+          selectIndex.secondary = 0;
+          selectIndex.comment = 0
+        }
+        console.log('C');
+        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
+        if (selectIndex.comment >= getNumComments(commentData, selectIndex.primary, selectIndex.secondary)) {
+          selectIndex.comment = 0
+        }
+        console.log('D');
+        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
+        
+        saveSelectIndices();
+
         loadPrimary();
         loadSecondary();
         loadComment();
+        handleCommentChange();
       });
     },
     error: function() {
-      $("#spanError").html('<b>Error: unable to load from comment data file</b>');
+      $("#spanError").html('<b>Error: unable to load from comment data file: ' + myURL + '</b>');
     }
   });
 }
@@ -105,13 +128,11 @@ function loadSecondary() {
 
 function loadComment() {
   var s = '';
-//  var primary = commentData[selectIndex.primary];
-//  var secondary = primary[selectIndex.secondary + 1];
-//  var comment = secondary[1];
   var n = getNumComments(commentData, selectIndex.primary, selectIndex.secondary);
 
   for (var i = 0; i < n; i++) {
     var text = getCommentText(commentData, selectIndex.primary, selectIndex.secondary, i);
+
     var fmt = "00" + i;
     var num = fmt.substr(fmt.length-3);
     var value = 'value="' + num + '" ';
@@ -123,9 +144,7 @@ function loadComment() {
     s += '<option ' + value + id + selected + '>' + text + '</option>';
   }
 
-  if (n > 20) n = 20;
-  if (n < 3) n = 3;
-  $("#selComment").attr("size", n);
+  $("#selComment").attr("size", 20);
   $("#selComment").html(s);
 }
 
@@ -146,7 +165,7 @@ function handleSecondaryChange() {
   loadComment();
 }
 
-function handleCommentChange(elem) {
+function handleCommentChange() {
   var option = currentOption('selComment');
   selectIndex.comment = parseInt(option);
   saveSelectIndices();
@@ -160,7 +179,8 @@ function currentOption(id) {
 
 function copyTextToClipboard(text) {
   var copyFrom = document.createElement("textarea");
-  copyFrom.textContent = text;
+  var cleantext = text.replace(/\|/gi, '\n');
+  copyFrom.textContent = cleantext;
   var body = document.getElementsByTagName('body')[0];
   body.appendChild(copyFrom);
   copyFrom.select();

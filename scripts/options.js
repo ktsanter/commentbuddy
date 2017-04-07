@@ -1,20 +1,15 @@
+"use strict";
 var commentData;
 var contextMenuId = '';
 
 $(document).ready(function() {
-  $(".divModify").addClass('hideMe');
-  loadData(chrome.runtime.getURL("./myComments.txt"));
-  
-  $(".btnTitle").click(function() {
-    handleTitleButtonClick(this.id);
-  });
-  
-  $(".btnControl").click(function() {
-    handleControlButtonClick(this.id);
-  });
+  loadData(chrome.runtime.getURL("./myComments.txt"));  
 });
 
 function loadData(myURL) {
+  // get file name form sync store
+  console.log('load');
+/*
   $.ajax({
     url: myURL,
     dataType: "text",
@@ -26,6 +21,7 @@ function loadData(myURL) {
       $("#spanError").html('<b>Error: unable to load from comment data file</b>');
     }
   });
+  */
 }
 
 function showData() {
