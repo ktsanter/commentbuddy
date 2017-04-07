@@ -4,15 +4,13 @@
   "name": "CommentBuddy",
   "description": "Copy stored comments to clipboard",
   "version": "0.2",
-  "options_page": "options.html",
   "browser_action": {
     "default_icon": "cb.png",
     "default_popup": "popup.html",
     "default_title": "Copy stored comments to clipboard"
   },
   "permissions": [
-    "storage",
-    "contextMenus"    
+    "storage"  
   ],
   "icons": {
      "16": "cb.png"

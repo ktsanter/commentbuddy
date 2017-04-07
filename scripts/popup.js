@@ -7,8 +7,7 @@ var selectIndex = {
 };
 
 $(document).ready(function() {
-  // get file name from sync store
-  loadData(chrome.runtime.getURL("commentbuddy.tsv"));
+  loadData();
     
   $("#selPrimary").change(function() {
      handlePrimaryChange();
@@ -21,57 +20,81 @@ $(document).ready(function() {
   $("#selComment").change(function() {
      handleCommentChange();
   });
+  
+  $("#inpFile").change(function() {
+    handleCommentFileNameChange(this)
+   });
 });
 
+function getCommentFileName() {
+/*
+  var fname = '';
+  chrome.storage.sync.get(['commentFileName'], function(items) {
+    if (typeof items.fileName != 'undefined') {
+      fname = items.commentFileName;
+    }
+  });
 
-function loadData(myURL) {
+  return fname;
+*/ 
+  return 'commentbuddy.tsv';
+}
+
+function storeCommentFileName(fname) {
+  chrome.storage.sync.set(
+    {"commentFileName": fname}, function() {}
+  );
+}
+
+function loadData() {
+  var fileName = getCommentFileName();
+  if (fileName === '') {
+    return;
+  }
+
   $.ajax({
-    url: myURL,
+    url: chrome.runtime.getURL(fileName),
     dataType: "text",
     success: function(data) {
       commentData = parseCommentData(data);
-      chrome.storage.sync.get(['primaryIndex', 'secondaryIndex', 'commentIndex'], function(items) {
-        selectIndex.primary = 0;
-        selectIndex.secondary = 0;
-        selectIndex.comment = 0;
-
-        if (typeof items.primaryIndex != 'undefined') {
-          selectIndex.primary = items.primaryIndex;
-          selectIndex.secondary = items.secondaryIndex;
-          selectIndex.comment = items.commentIndex;
-        }
-        console.log('A');
-        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
-        if (selectIndex.primary >= getNumPrimaryCategories(commentData)) {
-            selectIndex.primary = 0;
-            selectIndex.secondary = 0;
-            selectIndex.comment = 0
-        }
-        console.log('B');
-        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
-        if (selectIndex.secondary >= getNumSecondaryCategories(commentData, selectIndex.primary)) {
-          selectIndex.secondary = 0;
-          selectIndex.comment = 0
-        }
-        console.log('C');
-        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
-        if (selectIndex.comment >= getNumComments(commentData, selectIndex.primary, selectIndex.secondary)) {
-          selectIndex.comment = 0
-        }
-        console.log('D');
-        console.log(selectIndex.primary + ' ' + selectIndex.secondary + ' ' + selectIndex.comment);
-        
-        saveSelectIndices();
-
-        loadPrimary();
-        loadSecondary();
-        loadComment();
-        handleCommentChange();
-      });
+      initializeSelectIndices();
     },
     error: function() {
-      $("#spanError").html('<b>Error: unable to load from comment data file: ' + myURL + '</b>');
+      showError('unable to load from comment data file: "' + fileName + '"');
     }
+  });
+}
+
+function initializeSelectIndices() {
+  chrome.storage.sync.get(['primaryIndex', 'secondaryIndex', 'commentIndex'], function(items) {
+    selectIndex.primary = 0;
+    selectIndex.secondary = 0;
+    selectIndex.comment = 0;
+
+    if (typeof items.primaryIndex != 'undefined') {
+      selectIndex.primary = items.primaryIndex;
+      selectIndex.secondary = items.secondaryIndex;
+      selectIndex.comment = items.commentIndex;
+    }
+    if (selectIndex.primary >= getNumPrimaryCategories(commentData)) {
+        selectIndex.primary = 0;
+        selectIndex.secondary = 0;
+        selectIndex.comment = 0
+    }
+    if (selectIndex.secondary >= getNumSecondaryCategories(commentData, selectIndex.primary)) {
+      selectIndex.secondary = 0;
+      selectIndex.comment = 0
+    }
+    if (selectIndex.comment >= getNumComments(commentData, selectIndex.primary, selectIndex.secondary)) {
+      selectIndex.comment = 0
+    }
+        
+    saveSelectIndices();
+
+    loadPrimary();
+    loadSecondary();
+    loadComment();
+    handleCommentChange();
   });
 }
 
@@ -186,4 +209,13 @@ function copyTextToClipboard(text) {
   copyFrom.select();
   document.execCommand('copy');
   body.removeChild(copyFrom);
+}
+
+function showError(strError) {
+  $("#spanError").html('<b> Error - ' + strError + '</b>');
+}
+
+function handleCommentFileNameChange(elem) {
+  console.log('filenamechange: ');
+  console.log('value=' + elem.files[0]);
 }

@@ -54,3 +54,7 @@ td {
   color: blue;
   width: 100%;
 }
+
+.file-chooser {
+  margin:5px 0 5px 0;
+}
