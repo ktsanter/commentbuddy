@@ -10,7 +10,8 @@
     "default_title": "Copy stored comments to clipboard"
   },
   "permissions": [
-    "storage" 
+    "storage",
+    "clipboardWrite" 
   ],
   "icons": {
      "16": "cb.png"
