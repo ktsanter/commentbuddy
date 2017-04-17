@@ -15,5 +15,8 @@
   ],
   "icons": {
      "16": "cb.png"
+   },
+   "options_ui": {
+     "page": "options.html"
    }
 }
