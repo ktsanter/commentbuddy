@@ -24,6 +24,7 @@ $(document).ready(function() {
 
 function loadData(filename) {
   console.log('loadData...');
+  testload();
   var commentURL = chrome.runtime.getURL(filename);
   console.log('made URL...');
   $.ajax({
@@ -38,6 +39,20 @@ function loadData(filename) {
       showError('unable to load from comment data file "' + filename + '"');
     }
   });
+}
+
+function testload() {
+  var url = "http://ktsanter.duckdns.org/coursetipseditor/public/" + 'ktsanter';  
+  $.ajax({
+    url: url,
+    dataType: 'json',
+    success: function(data) {
+      console.log('success');
+    },
+    error: function (error) {
+      console.log('failed to download course tips manifest');
+    }
+  }); 
 }
 
 function initializeSelectIndices() {
