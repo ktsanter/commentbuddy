@@ -9,7 +9,9 @@
   </head>
     
   <body>
-    <input type="file" id="files" name="files[]" />
-    <output id="list"></output>
+  <form id="myForm" enctype="multipart/form-data" action="/commentbuddy/user/data" method="post">
+    <input type="file" id="files" name="file" />
+    <input type='submit'/> 
+  </form>
   </body>
 </html>
