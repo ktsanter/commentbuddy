@@ -1,6 +1,7 @@
 "use strict";
 
 $(document).ready(function() {
+  $("#btnUpdate").prop("disabled", true);
   $("#files").on("change", function() {
     handleFileSelect(this.files);
   })
@@ -12,54 +13,32 @@ $(document).ready(function() {
 
 function handleFileSelect(files) {
   console.log('handleFileSelect');
-  /*
-  var s = "<div>";
-  console.log('file handler: files.length=' + files.length);
-  for (var i = 0, f; f = files[i]; i++) {
-    s += 'name=' + f.name + '<br/>';
-    s += ' type=' + (f.type || 'n/a') + '<br/>';
-    s += ' size=' + f.size + '<br/>';
-    s += ' date=' + (f.lastModifiedData ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '<br/>';
-    s += ' path=' + f.webkitRelativePath;
-                
-  }
-  s += "</div>";
-  $("#list").html(s);
-  upload(files[0]);
-  */
-}
-
-function upload(f) {
- $.ajax({
-    url: f,
-    dataType: "text",
-    success: function(data) {
-      console.log('read data...');
-      upload2(data);
-    },
-    error: function() {
-      console.log('unable to load from comment data file "' + f.name + '"');
-    }
-  });
-}
-
-function upload2(data) {
-  $.ajax({
-    url: "/commentbuddy/user/data",
-    type: "POST",
-    contentType: text,
-    data: data,
-    cache:false,
-    success: function(data) {
-      console.log('upload succeeded');
-    },
-     error: function (jqXHR,  textStatus,  errorThrown ) {
-       console.log('failed to upload comment file');
-       console.log(textStatus + '\n' + errorThrown);
-     }
-  });
+  //if a file is selected
+  $("#btnUpdate").prop("disabled", false);
+  $("#uploadResult").html();
+  
 }
 
 function handleUploadClick() {
-  
+  var form = $("#myForm");
+  var formdata = false;
+  if (window.FormData){
+    formdata = new FormData(form[0]);
+  }
+
+  $.ajax({
+    url         : '/commentbuddy/user/data',
+    data        : formdata ? formdata : form.serialize(),
+    cache       : false,
+    contentType : false,
+    processData : false,
+    type        : 'POST',
+    success     : function(data, textStatus, jqXHR){
+      $("#uploadResult").html('upload succeeded');;
+      $("#btnUpdate").prop("disabled", true);
+    },
+    error: function (error) {
+      $("#uploadResult").html('upload failed');
+    }
+  });
 }
