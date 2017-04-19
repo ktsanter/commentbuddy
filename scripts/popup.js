@@ -7,6 +7,7 @@ var selectIndex = {
 };
 
 $(document).ready(function() {
+
   loadData($("#filename").html().trim());
     
   $("#selPrimary").change(function() {
@@ -20,6 +21,12 @@ $(document).ready(function() {
   $("#selComment").change(function() {
      handleCommentChange();
   });
+  
+  $("#copy-button").click(function(){
+    new Clipboard('#copy-button');
+  });
+
+
 });
 
 function loadData(filename) {
@@ -204,3 +211,4 @@ function copyTextToClipboard(text) {
 function showError(strError) {
   $("#spanError").html('<b> Error - ' + strError + '</b>');
 }
+

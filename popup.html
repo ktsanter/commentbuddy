@@ -2,8 +2,11 @@
 <html>
   <head>
     <script src='scripts/jquery-1.6.1.min.js'></script>
+	<script src="scripts/clipboard.min.js"></script>
     <script src="scripts/popup.js"></script>
     <script src="scripts/parse.js"></script>
+	
+
     <link rel="stylesheet" href="styles/popup.css" type="text/css" />
   </head>
   <body>
@@ -34,5 +37,8 @@
         </td>
       </tr>
     </table>
+	
+<input id="post-shortlink" value="https://ac.me/qmE_jpnYXFo">
+<button class="button" id="copy-button" data-clipboard-target="#post-shortlink">Copy</button>
   </body>
 </html>
