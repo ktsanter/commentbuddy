@@ -1,0 +1,30 @@
+body {
+  font:14px arial,sans-serif;
+}
+
+.cb-container {
+	width:500px;
+	color: #185A6A;
+	background-color: #EAEAEA;
+}
+
+.cb-title {
+	width:100%;
+	color: #EAEAEA;
+	background-color: #185A6A;
+	font-size:18px;
+	font-weight:bold;
+	margin-bottom:20px;
+	border:1px, solid, black;
+	border-radius:6px;
+}
+
+.table-upload {
+	width:100%;
+	border:1px solid black;
+	border-radius:6px;
+}
+
+.td-upload {
+	text-align:right;
+}
