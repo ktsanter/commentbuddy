@@ -25,9 +25,10 @@ $(document).ready(function() {
 function checkIfAuthorized() {
 	$.ajax({
 		url: "/auth/query",
-		dataType: 'text',
+		dataType: 'JSON',
 		success: function(data) {
-			if (data == 'YES') {
+			console.log(JSON.stringify(data));
+			if (data.auth == 'YES') {
 				$("#authorized").show();
 			} else {
 				$("#noAuth").show();

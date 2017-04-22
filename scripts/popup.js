@@ -1,4 +1,5 @@
 "use strict";
+
 var commentData;
 var selectIndex = {
   "primary": 0,
@@ -8,7 +9,8 @@ var selectIndex = {
 
 $(document).ready(function() {
 
-  loadData($("#filename").html().trim());
+  loadDataFromLocal($("#filename").html().trim());
+  loadDataFromServer();
     
   $("#selPrimary").change(function() {
      handlePrimaryChange();
@@ -25,13 +27,10 @@ $(document).ready(function() {
   $("#copy-button").click(function(){
     new Clipboard('#copy-button');
   });
-
-
 });
 
-function loadData(filename) {
+function loadDataFromLocal(filename) {  // from local file
   console.log('loadData...');
-  testload();
   var commentURL = chrome.runtime.getURL(filename);
   console.log('made URL...');
   $.ajax({
@@ -48,18 +47,30 @@ function loadData(filename) {
   });
 }
 
-function testload() {
-  var url = "http://ktsanter.duckdns.org/coursetipseditor/public/" + 'ktsanter';  
-  $.ajax({
-    url: url,
-    dataType: 'json',
-    success: function(data) {
-      console.log('success');
-    },
-    error: function (error) {
-      console.log('failed to download course tips manifest');
-    }
-  }); 
+function loadDataFromServer() {
+	console.log('loadDataFromServer...');
+	var username = '';
+	chrome.storage.sync.get({"username":'unknown'}, function(items) {
+		console.log(JSON.stringify(items));
+		username = items.username;
+		console.log("user name = " + username);
+		if (username == 'unknown') {
+			console.log('no username specified');
+		} else {
+			var url = 'http://ktsanter.duckdns.org/commentbuddy/public/' + username;
+			console.log('url=' + url);
+			$.ajax({
+				url: url,
+				dataType: 'text',
+				success: function(data) {
+					console.log('success in loading comment data');
+				},
+				error: function (error) {
+					console.log('failed to download comment data');
+				}
+			});
+		}	
+	});
 }
 
 function initializeSelectIndices() {

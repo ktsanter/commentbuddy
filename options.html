@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title> ChromeBuddy options </title>
 		<script src='scripts/jquery.min.js'></script>
 		<script src="scripts/options.js"></script>
 	</head>
   
 	<body>
-		redirecting to CommentBuddy configuration page...
+		<table>
+			<tr>
+				<td> User name </td>
+				<td>
+					<input type='text' id='inpUsername'/>
+				</td>
+				<td>
+					<button id='btnSaveUserName'> save </button>
+				</td>
+			</tr>
+			
+			<tr>
+				<td> Upload comment file </td>
+				<td colspan='2'>
+					<button id='btnUploadRedirect'> upload comment file </button>
+				</td>
+			</tr>
+		</table>
 	</body>
 </html>
