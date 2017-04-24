@@ -2,6 +2,7 @@
 <html>
   <head>
     <script src='scripts/jquery-1.6.1.min.js'></script>
+	<script src="scripts/marked.min.js"></script>
 	<script src="scripts/clipboard.min.js"></script>
     <script src="scripts/popup.js"></script>
     <script src="scripts/parse.js"></script>
@@ -38,7 +39,7 @@
       </tr>
     </table>
 	
-<input id="post-shortlink" value="https://ac.me/qmE_jpnYXFo">
-<button class="button" id="copy-button" data-clipboard-target="#post-shortlink">Copy</button>
+	<div id="copyTarget" class='formatted-comment'> </div>
+	<button id='btnCopy' class="btn hide-me" data-clipboard-target="#copyTarget"></button>
   </body>
 </html>

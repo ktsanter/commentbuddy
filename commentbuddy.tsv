@@ -22,10 +22,10 @@ Visual Basic
 		After you add to your post I'll update your score
 	other	generic comment
 		multi-line comment|continued on this line
-		generic comment 2
-		generic comment 3
-		generic comment 4
-		generic comment 5
-		generic comment 6
+		A **bold** comment
+		An *italic* comment
+		A ***bold italic*** comment
+		This should be a `bcode block`e and this shouldnt. 
+		this should be a list: | - a | - b || and the rest of the comment
 		generic comment 7
 		generic comment 8

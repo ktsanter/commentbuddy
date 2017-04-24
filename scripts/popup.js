@@ -24,9 +24,8 @@ $(document).ready(function() {
      handleCommentChange();
   });
   
-  $("#copy-button").click(function(){
-    new Clipboard('#copy-button');
-  });
+  $("#copyTarget").hide();
+  new Clipboard('.btn');
 });
 
 function loadDataFromLocal(filename) {  // from local file
@@ -211,14 +210,34 @@ function currentOption(id) {
 }
 
 function copyTextToClipboard(text) {
-  var copyFrom = document.createElement("textarea");
-  var cleantext = text.replace(/\|/gi, '\n');
-  copyFrom.textContent = cleantext;
-  var body = document.getElementsByTagName('body')[0];
-  body.appendChild(copyFrom);
-  copyFrom.select();
-  document.execCommand('copy');
-  body.removeChild(copyFrom);
+	var formattedText = formatTextFromMarkup(text);
+	$("#copyTarget").show();
+
+	$("#copyTarget").html(formattedText);
+	$("#btnCopy").click();
+	$("#copyTarget").hide();
+	/*
+	var copyFrom = document.createElement("textarea");
+	copyFrom.textContent = formattedText;
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(copyFrom);
+	copyFrom.select();
+	document.execCommand('copy');
+	body.removeChild(copyFrom);
+	*/
+}
+
+function formatTextFromMarkup(text) {
+	var codeblockspan = "<span style=\"font-family: 'courier new', courier;\">";
+	var codeblockendspan = '</span>';
+	console.log('text before=' + text);
+	var formattedText = text.replace(/\|/gi, ' \r\n');
+	var formattedText = formattedText.replace(/`b/gi, codeblockspan);
+	var formattedText = formattedText.replace(/`e/gi, codeblockendspan);
+	var formattedText = marked( formattedText );
+	console.log('text after=' + formattedText);  
+
+	return formattedText;
 }
 
 function showError(strError) {

@@ -53,3 +53,9 @@ td {
 .hide-me {
   display:none;
 }
+
+.formatted-comment {
+	font: 12px arial, sans-serif;
+	color:black;
+	background-color:white;
+}
