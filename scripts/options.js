@@ -15,7 +15,7 @@ $(document).ready(function() {
 function handleUploadRedirect() {
 	console.log('redirect...');
 	window.close();
-	window.open("https://ktsanter.duckdns.org/commentbuddy/index.html", "_blank");
+	window.open("https://yheti.duckdns.org/commentbuddy/index.html", "_blank");
 }
 
 function handleSaveUserNameClick() {

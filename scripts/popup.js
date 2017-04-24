@@ -9,7 +9,7 @@ var selectIndex = {
 
 $(document).ready(function() {
 
-  loadDataFromLocal($("#filename").html().trim());
+ // loadDataFromLocal($("#filename").html().trim());
   loadDataFromServer();
     
   $("#selPrimary").change(function() {
@@ -57,13 +57,15 @@ function loadDataFromServer() {
 		if (username == 'unknown') {
 			console.log('no username specified');
 		} else {
-			var url = 'http://ktsanter.duckdns.org/commentbuddy/public/' + username;
+			var url = 'https://yheti.duckdns.org/commentbuddy/public/' + username;
 			console.log('url=' + url);
 			$.ajax({
 				url: url,
 				dataType: 'text',
 				success: function(data) {
 					console.log('success in loading comment data');
+					commentData = parseCommentData(data);
+					initializeSelectIndices();
 				},
 				error: function (error) {
 					console.log('failed to download comment data');
