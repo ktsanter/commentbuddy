@@ -41,7 +41,8 @@ function checkIfAuthorized() {
 }
 
 function handleLoginButtonClick() {
-  window.location.replace("https://ktsanter.duckdns.org/auth/in");
+	  localStorage.setItem('redirectApp', 'commentbuddy');
+	  window.location.replace("https://yheti.duckdns.org/auth/in");
 }
 
 function handleFileSelect(files) {
