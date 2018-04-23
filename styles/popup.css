@@ -1,24 +1,73 @@
+.cb-colorscheme {
+	--cb-popup-fg: #185A6A;
+	--cb-popup-bg: #EAEAEA;
+}
+
 body {
-  overflow-x: scroll;
-  width: 600px;
-  height: 400px;
-  margin:0;
-  padding:0;
-  color: #185A6A;
-  background-color: #EAEAEA;
+	overflow-x: scroll;
+	width: 600px;
+	height: 500px;
+	margin:0;
+	padding:0;
+	color: var(--cb-popup-fg);
+	background-color: var(--cb-popup-bg);
 }
 
-.title {
-  color: #EAEAEA;
-  background-color: #185A6A;
-  border-style: solid;
-  border-color: #EAEAEA;
-  border-width: 1px;
-  border-radius: 5px;
-  font-size: 15px;
+.cb-title {
+	color: var(--cb-popup-bg);
+	background-color: var(--cb-popup-fg);
+	border-style: solid;
+	border-color: var(--cb-popup-bg);
+	border-width: 1px;
+	border-radius: 5px;
+	font-size: 15px;
 }
 
-select {
+.cb-label {
+	width: 10%;
+	font-family: arial;
+	font-size: 13px;
+	padding-top: 3px;
+}
+
+.cb-data {
+	width: 85%;
+}
+
+.cb-row {
+	height: 8%;
+}
+
+.cb-btn {
+	color: var(--cb-popup-bg);
+	background-color: var(--cb-popup-fg);
+	border-radius: 8px;
+}
+
+.cb-comment-search{
+	width: 90%;
+}
+
+.cb-tag-search {
+	width: 90%;
+}
+
+.cb-tagsearch-label {
+	width: 90%;
+	color: black;
+	display: inline-block;
+	background-color: var(--cb-popup-bg);
+	border: 1px solid var(--cb-popup-fg);
+	font-size: 13px;
+}
+
+.cb-tag-selection-area {
+	border: 1px solid var(--cb-popup-fg);
+	overflow-x: scroll;
+	overflow-y: auto;
+}
+
+.cb-comment-select {
   overflow-x: scroll;
   overflow-y: auto;
   font-family: arial;
@@ -26,35 +75,19 @@ select {
   width: 100%;
 }
 
-table {
-  width: 100%;
-  height: 100%;
-}
-
-.trDropDown {
-  height: 8%;
-}
-
-td {
-  vertical-align: top;
-}
-
-.tdLabel {
-  width: 10%;
-  font-family: arial;
-  font-size: 13px;
-  padding-top: 3px;
-}
-
-.tdData {
-  width: 85%;
+.cb-align-right {
+	float: right;
+	width: 100%;
+	color: var(--cb-popup-bg);
+	background-color: var(--cb-popup-fg);
+	border-radius: 8px;
 }
 
 .hide-me {
-  display:none;
+	display:none;
 }
 
-.formatted-comment {
+.cb-formatted-comment {
 	font: 12px arial, sans-serif;
 	color:black;
 	background-color:white;

@@ -3,49 +3,60 @@
   <head>
     <link rel="stylesheet" href="styles/popup.css" type="text/css" />
   </head>
-  <body>
+  
+  <body class='cb-colorscheme'>
     <span id='filename' class='hide-me'> commentbuddy.tsv </span>
-    <div class='title'> Comment Buddy </div>
+    <div class='cb-title'> Comment Buddy </div>
 
     <span id='spanError'></span>
 
     <table>
-      <tr class='trDropDown'>
-        <td class='tdLabel'> Search </td>
-        <td class='tdData'>
-          <input id='inputSearch' type='text' style = "width:95%" maxlength=80> 
-        </td>
-      </tr>
-      
-      <tr class='trDropDown'>
-        <td class='tdLabel'> Keywords </td>
-        <td class='tdData'> 
-			<input id='inputSearch' type='text' style = "width:95%" maxlength=80> 
-			<input id='radioKeyword' name='radioKeyword'type='radio' value='0'> none 
-			<input id='radioKeyword' name='radioKeyword' type='radio' value='1'> selected
-			<div id='keywordSelectData'>
-			<!-- build checkboxes for unique keywords
-			<input type="checkbox" name="vehicle" value="Bike"> I have a bike<br>
-			-->
-			</div>
+      <tr class='cb-row'>
+        <td class='cb-label'> Search </td>
+        <td class='cb-data'>
+          <input id='inputCommentSearch' type='text' class='cb-comment-search' maxlength=80> 
 		</td>
       </tr>
-    
+      
+      <tr class='cb-row'>
+        <td class='cb-label'> Tags </td>
+        <td class='cb-data'> 
+			<input id='inputTagSearch' type='text' class='cb-tag-search' maxlength=80> 
+			<label id='labelTagSearch' class='cb-tagsearch-label' for='inputCommentSearch'> xxx </label>
+			<button id='btnTagOpenClose' class='cb-btn'>  </button>
+			<div id='tagSelectContent' class='cb-tag-selection-area hide-me'> </div>
+		</td>
+      </tr>
+	
+      <tr class='cb-row'>
+        <td> 
+			<button id='btnRetrieve' class='cb-align-right'> go </button>
+		</td>
+		<td> </td>
+      </tr>
+
+	  <tr>
+		<td colspan=2>
+			<hr/>
+		</td>
+	  <tr>
+	  
       <tr>
-        <td class='tdLabel'> Comments </td>
-        <td class='tdData'>
-          <select id='selComment' class='lstComment'> </select>
+        <td class='cb-label'> Comments </td>
+        <td class='cb-data'>
+          <select id='selComment' class='cb-comment-select'> </select>
         </td>
       </tr>
     </table>
 	
-	<div id="copyTarget" class='formatted-comment'> </div>
-	<button id='btnCopy' class="btn hide-me" data-clipboard-target="#copyTarget"></button>
+	<div id="copyTarget" class='cb-formatted-comment'> </div>
+	<button id='btnCopy' class="cb-btn hide-me" data-clipboard-target="#copyTarget"></button>
 	
     <script src='scripts/jquery-1.6.1.min.js'></script>
 	<script src="scripts/marked.min.js"></script>
 	<script src="scripts/clipboard.min.js"></script>
     <script src="scripts/popup.js"></script>
     <script src="scripts/parse.js"></script>
+    <script src="scripts/retrieve.js"></script>
   </body>
 </html>
