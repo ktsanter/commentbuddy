@@ -1,13 +1,6 @@
 <!doctype html>
 <html>
   <head>
-    <script src='scripts/jquery-1.6.1.min.js'></script>
-	<script src="scripts/marked.min.js"></script>
-	<script src="scripts/clipboard.min.js"></script>
-    <script src="scripts/popup.js"></script>
-    <script src="scripts/parse.js"></script>
-	
-
     <link rel="stylesheet" href="styles/popup.css" type="text/css" />
   </head>
   <body>
@@ -18,17 +11,24 @@
 
     <table>
       <tr class='trDropDown'>
-        <td class='tdLabel'> Primary </td>
+        <td class='tdLabel'> Search </td>
         <td class='tdData'>
-          <select id='selPrimary'> </select>
+          <input id='inputSearch' type='text' style = "width:95%" maxlength=80> 
         </td>
       </tr>
       
       <tr class='trDropDown'>
-        <td class='tdLabel'> Secondary </td>
-        <td class='tdData'>
-          <select id='selSecondary'> </select>
-        </td>
+        <td class='tdLabel'> Keywords </td>
+        <td class='tdData'> 
+			<input id='inputSearch' type='text' style = "width:95%" maxlength=80> 
+			<input id='radioKeyword' name='radioKeyword'type='radio' value='0'> none 
+			<input id='radioKeyword' name='radioKeyword' type='radio' value='1'> selected
+			<div id='keywordSelectData'>
+			<!-- build checkboxes for unique keywords
+			<input type="checkbox" name="vehicle" value="Bike"> I have a bike<br>
+			-->
+			</div>
+		</td>
       </tr>
     
       <tr>
@@ -41,5 +41,11 @@
 	
 	<div id="copyTarget" class='formatted-comment'> </div>
 	<button id='btnCopy' class="btn hide-me" data-clipboard-target="#copyTarget"></button>
+	
+    <script src='scripts/jquery-1.6.1.min.js'></script>
+	<script src="scripts/marked.min.js"></script>
+	<script src="scripts/clipboard.min.js"></script>
+    <script src="scripts/popup.js"></script>
+    <script src="scripts/parse.js"></script>
   </body>
 </html>
