@@ -25,7 +25,7 @@ var cbData = {
 };
 
 $(document).ready(function() {
-	loadDataFromInternal();
+	loadTagData();
 
 	document.getElementById(cbData.tagSearchLabelId).classList.add(cbData.visibilityClass);
 	
@@ -51,9 +51,8 @@ $(document).ready(function() {
 	new Clipboard('#btnCopy');
 });
 
-function loadDataFromInternal() {
-	cbData.commentData = parseCommentData();
-	buildTagSelectHTML();
+function loadTagData() {
+	retrieveTagList(cbData.commentData, buildTagSelectHTML);
 }
 
 function buildTagSelectHTML()
@@ -196,12 +195,11 @@ function handleRetrieveButton()
 		}
 	}
 
-	var retrievedComment = retrieveComments(cbData.commentData, searchString, tagList);
-
-	loadCommentList(retrievedComment);
+	retrieveComments(cbData.commentData, searchString, tagList, loadCommentList);
 }
 
-function loadCommentList(commentList) {
+function loadCommentList() {
+	var commentList = cbData.commentData.commentList;
 	var elemWrapper = document.getElementById(cbData.commentListId);
 	
 	while (elemWrapper.childNodes.length > 0) {
@@ -219,7 +217,6 @@ function loadCommentList(commentList) {
 	}
 
 	$("#selComment").attr("size", Math.max(20, commentList.length));
-
 }
 
 function handleCommentChange() {
