@@ -22,22 +22,18 @@ var emojifierData = {
 	"pig": "&#x1F437;",
 	"goat": "&#x1F410;",
 	"camel": "&#x1F42A;",
+	"rocket": "&#x1F680;"
 };
 
 function emojifyString(originalString)
 {
 	var s = originalString;
-	console.log("orig=" + originalString);
 	
-    var pattern = /\:.*\:/g;
+    var pattern = /\:[^:]*\:/g;
 		
 	var result;
 	while ( (result = pattern.exec(s)) !== null) {
-		console.log("result=" + result);
-		console.log('index=' + result.index);
-		console.log('lastindex=' + pattern.lastIndex);
-
-		//s = s.substring(0, result.index) + emojify(result.toString(), true) + s.substring(pattern.lastIndex);
+		s = s.substring(0, result.index) + emojify(result.toString(), true) + s.substring(pattern.lastIndex);
 	}
 
 	return s;
@@ -45,16 +41,16 @@ function emojifyString(originalString)
 
 function emojify(source, stripColons)
 {
-	console.log("emojify: |" + source + "|");
-	if (stripColons) {
-		source = source.slice(1, -1);
-	}
-	console.log("source=|" + source + "|");
+	var ename = source;
 	
-	var result = emojifierData[source];
-	console.log(result);
-	if (typeof result == undefined) {
+	if (stripColons) {
+		ename = ename.slice(1, -1);
+	}
+	
+	var result = emojifierData[ename];
+	if (result == undefined) {
 		result = source;
 	}
+
 	return result;	
 }

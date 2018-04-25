@@ -201,7 +201,6 @@ function handleInputKeyUp(elem, e)
 
 function handleRetrieveButton()
 {
-	/**/
 	var searchString = document.getElementById(cbData.commentSearchInputId).value;
 	var tagList = [];
 
@@ -220,8 +219,6 @@ function handleRetrieveButton()
 
 	retrieveComments(cbData.commentData, searchString, tagList, loadCommentList);
 	saveCurrentSettings();
-	/**/
-	//console.log("esResult=" + emojifyString("bob :camel: is :: not a :pencil: smith"));
 }
 
 function loadCommentList() {
@@ -281,18 +278,19 @@ function formatTextFromMarkup(text) {
 
 	var walker = parsed.walker();
 	var event, node;
-
+/*
 	while ((event = walker.next())) {
 	  node = event.node;
 	  console.log('type=' + node.type + ' literal=' + node.literal + ' info=' + node.info);
 	}	
-	
+*/
 	var result = writer.render(parsed);
 	result = emojifyString(result);
 	result = result.replaceAll(lineBreak, "<br/>");
 	result = result.replaceAll('<code>', codeblockspan);
 	result = result.replaceAll('</code>', codeblockendspan);
 	result = result.replaceAll('\\t', pseudoTab);
+	result = emojifyString(result);
 
 	return result;
 }
