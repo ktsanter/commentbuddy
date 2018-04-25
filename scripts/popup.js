@@ -21,13 +21,14 @@ var cbData = {
 	"caretCharacter": {
 		"up":  "&#9650;",
 		"down": "&#9660;"
-	}
+	},
 };
 
-$(document).ready(function() {
-	loadTagData();
-
+$(document).ready(function() {	
 	document.getElementById(cbData.tagSearchLabelId).classList.add(cbData.visibilityClass);
+	document.getElementById(cbData.commentSearchInputId).addEventListener('keyup', function(e) {
+		handleInputKeyUp(this, e);
+	});
 	
 	var elemTagBlockOpenClose = document.getElementById(cbData.tagSelectButtonId);
 	elemTagBlockOpenClose.innerHTML = cbData.caretCharacter.down;
@@ -37,12 +38,17 @@ $(document).ready(function() {
 	
 	document.getElementById(cbData.tagSearchInputId).addEventListener('click', function() {
 		handleTagSearchInputClick(this);
+	});	
+	document.getElementById(cbData.tagSearchInputId).addEventListener('keyup', function(e) {
+		handleInputKeyUp(this, e);
 	});
-	
+
 	document.getElementById(cbData.retrieveButtonId).addEventListener('click', function() {
 		handleRetrieveButton();
 	});
 	
+	loadTagData();
+
 	$("#selComment").change(function() {
 		handleCommentChange();
 	});
@@ -82,6 +88,15 @@ function buildTagSelectHTML()
 		container.appendChild(label);
 		container.appendChild(document.createElement('br'));	
 	}
+	
+	retrieveSettings(document.getElementById(cbData.commentSearchInputId), document.getElementById(cbData.tagSearchInputId), handleRetrieveButton);
+}
+
+function saveCurrentSettings()
+{
+	var elemSearch = document.getElementById(cbData.commentSearchInputId);
+	var elemTag = document.getElementById(cbData.tagSearchInputId);
+	storeSettings(elemSearch, elemTag);
 }
 
 function handleTagBlockOpenClose(btn)
@@ -177,8 +192,16 @@ function setTagSelectionsToMatchSearch()
 	elemTagSearch.value = sValid;
 }
 
+function handleInputKeyUp(elem, e) 
+{
+	if (e.keyCode == 13) {
+		handleRetrieveButton();
+	}
+}
+
 function handleRetrieveButton()
 {
+	/**/
 	var searchString = document.getElementById(cbData.commentSearchInputId).value;
 	var tagList = [];
 
@@ -196,6 +219,9 @@ function handleRetrieveButton()
 	}
 
 	retrieveComments(cbData.commentData, searchString, tagList, loadCommentList);
+	saveCurrentSettings();
+	/**/
+	//console.log("esResult=" + emojifyString("bob :camel: is :: not a :pencil: smith"));
 }
 
 function loadCommentList() {
@@ -216,7 +242,7 @@ function loadCommentList() {
 		elemWrapper.appendChild(elem);
 	}
 
-	$("#selComment").attr("size", Math.max(20, commentList.length));
+	$("#selComment").attr("size", Math.max(20, commentList.length + 1));
 }
 
 function handleCommentChange() {
@@ -246,14 +272,36 @@ function copyTextToClipboard(text) {
 function formatTextFromMarkup(text) {
 	var codeblockspan = "<span style=\"font-family: 'courier new', courier;\">";
 	var codeblockendspan = '</span>';
+	var lineBreak = "|";
+	var pseudoTab = "&nbsp;&nbsp;&nbsp;";
+	
+	var reader = new commonmark.Parser();
+	var writer = new commonmark.HtmlRenderer();
+	var parsed = reader.parse(text);
 
-	var formattedText = text.replace(/\|/gi, ' \r\n');
-	var formattedText = formattedText.replace(/`b/gi, codeblockspan);
-	var formattedText = formattedText.replace(/`e/gi, codeblockendspan);
-	var formattedText = marked( formattedText );
+	var walker = parsed.walker();
+	var event, node;
 
-	return formattedText;
+	while ((event = walker.next())) {
+	  node = event.node;
+	  console.log('type=' + node.type + ' literal=' + node.literal + ' info=' + node.info);
+	}	
+	
+	var result = writer.render(parsed);
+	result = emojifyString(result);
+	result = result.replaceAll(lineBreak, "<br/>");
+	result = result.replaceAll('<code>', codeblockspan);
+	result = result.replaceAll('</code>', codeblockendspan);
+	result = result.replaceAll('\\t', pseudoTab);
+
+	return result;
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+
 
 function showError(strError) {
 	$("#spanError").html('<b> Error - ' + strError + '</b>');

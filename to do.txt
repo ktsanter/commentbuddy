@@ -1,1 +1,6 @@
 - remember state
+- add configuration: 
+	username 
+	password? 
+	spreadsheetURL
+	instructions/reminders

@@ -1,5 +1,30 @@
 "use strict";
 
+function retrieveSettings(searchElem, tagElem, callback)
+{
+	chrome.storage.sync.get(['cbSearch', 'cbTags'], function(result) {
+		var searchString = '';
+		var tagString = '';
+
+		if (typeof result.cbSearch != 'undefined') {
+			searchString = result.cbSearch;
+		}
+		if (typeof result.cbTags != 'undefined') {
+			tagString = result.cbTags;
+		}
+		
+		searchElem.value = searchString;
+		tagElem.value = tagString;
+		callback();
+    });
+}
+
+function storeSettings(searchElem, tagElem)
+{
+	var keys = {"cbSearch": searchElem.value, "cbTags": tagElem.value};
+	chrome.storage.sync.set(keys, function() {});
+}
+
 function retrieveTagList(objResultData, followingFunc)
 {
 	getCommentSpreadsheetData(parseTagData, null, objResultData, followingFunc);
@@ -96,7 +121,9 @@ function searchStringMatches(searchString, comment)
 	var match = true;
 	var search = searchString.trim();
 	if (search.length > 0) {
-		match = (comment.search(searchString) >= 0);
+		var lcomment = comment.toLowerCase();
+		var lsearch = search.toLowerCase();
+		match = (lcomment.search(lsearch) >= 0);
 	}
 	
 	return match;
