@@ -1,4 +1,3 @@
-- remember state including selected comment
 - add configuration: 
 	instructions/reminders
 - auto-fill student name?

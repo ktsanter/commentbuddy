@@ -7,7 +7,7 @@ function retrieveSettings(urlElem, searchElem, tagElem, callback)
 		var urlString = '';
 		var searchString = '';
 		var tagString = '';
-		var commentIndex = 0;
+		var commentIndex = -1;
 
 		if (typeof result.cbURL != 'undefined') {
 			urlString = result.cbURL;
@@ -24,6 +24,7 @@ function retrieveSettings(urlElem, searchElem, tagElem, callback)
 		
 		cbData.spreadsheetURL = urlString;
 		cbData.commentIndex = commentIndex;
+		console.log('retrieved: ' + cbData.commentIndex);
 		urlElem.value = urlString;
 		searchElem.value = searchString;
 		tagElem.value = tagString;

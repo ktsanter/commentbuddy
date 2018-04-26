@@ -3,7 +3,7 @@
 var cbData = {
 	"spreadsheetURL": "",
 	"commentData": {},
-	"commentIndex": 0,
+	"commentIndex": -1,
 
 	"errorWrapper": "spanError",
 	
@@ -97,7 +97,7 @@ function loadTagData() {
 function clearAllData()
 {
 	cbData.commentData = {};
-	cbData.commentIndex = 0;
+	cbData.commentIndex = -1;
 	document.getElementById(cbData.commentSearchInputId).value = '';
 	document.getElementById(cbData.tagSearchInputId).value = '';
 	document.getElementById(cbData.tagSearchLabelId).innerHTML = '';
@@ -108,10 +108,20 @@ function clearAllData()
 
 function buildTagSelectHTML()
 {
+	var maxTagsInColumn = 16;
 	var container = document.getElementById(cbData.tagSelectContentId);
 	var selectName = cbData.tagSelectId;
 
+	var elemTable = document.createElement('table');
+	var elemRow = [];
+	for (var i = 0; i < maxTagsInColumn; i++) {
+		elemRow[i] = document.createElement('tr');
+		elemTable.appendChild(elemRow[i]);
+	}
+	
 	for (var i = 0; i < cbData.commentData.tagarray.length; i++) {
+		var elemCell = document.createElement('td');
+		
 		var selectId = selectName + ("0000" + i).slice(-4);
 		var tagval = cbData.commentData.tagarray[i];
 		
@@ -129,11 +139,13 @@ function buildTagSelectHTML()
 		label.htmlFor = selectId;
 		label.appendChild(document.createTextNode(tagval));
 		
-		container.appendChild(cb);
-		container.appendChild(label);
-		container.appendChild(document.createElement('br'));	
+		elemCell.appendChild(cb);
+		elemCell.appendChild(label);
+		elemRow[i % maxTagsInColumn].appendChild(elemCell);	
 		
 	}
+	
+	container.appendChild(elemTable);
 	handleRetrieveButton();
 }
 
@@ -164,6 +176,8 @@ function handleTagBlockOpenClose(btn)
 		elemSearch.classList.remove(cbData.visibilityClass);
 		elemLabel.classList.add(cbData.visibilityClass);
 		elemComment.classList.remove(cbData.visibilityClass);
+		cbData.commentIndex = -1;
+		handleRetrieveButton();
 	}		
 }
 
@@ -244,6 +258,7 @@ function setTagSelectionsToMatchSearch()
 function handleInputKeyUp(elem, e) 
 {
 	if (e.keyCode == 13) {
+		cbData.commentIndex = -1;
 		handleRetrieveButton();
 	}
 }
@@ -276,7 +291,7 @@ function hideConfigureButton()
 function handleConfigureSaveButton()
 {
 	cbData.spreadsheetURL = document.getElementById(cbData.urlInputId).value;
-	cbData.commentIndex = 0;
+	cbData.commentIndex = -1;
 	document.getElementById(cbData.commentSearchInputId).value = '';
 	document.getElementById(cbData.tagSearchInputId).value = '';
 	saveCurrentSettings(function () {
@@ -328,8 +343,11 @@ function loadCommentList() {
 		elemWrapper.appendChild(elem);
 	}
 
-	var elemIdCurrent = 'optComment' + ("00000" + cbData.commentIndex).slice(-5);
-	document.getElementById(elemIdCurrent).selected = true;
+	if (cbData.commentIndex >= 0) {
+		var elemIdCurrent = 'optComment' + ("00000" + cbData.commentIndex).slice(-5);
+		document.getElementById(elemIdCurrent).selected = true;	
+		handleCommentChange();
+	}
 	
 	$("#selComment").attr("size", 20);
 }
@@ -338,6 +356,7 @@ function handleCommentChange() {
 	var option = currentOption('selComment');
 	var id = 'optComment' + option;
 	var elem = document.getElementById(id);
+	console.log("handleCommentChange: "	+ id);
 	cbData.commentIndex = parseInt(option);
 	saveCurrentSettings(null);
 	copyTextToClipboard(elem.innerHTML);
