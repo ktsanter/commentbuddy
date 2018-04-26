@@ -23,6 +23,13 @@ body {
 	font-size: 15px;
 }
 
+.cb-error {
+	font-size: 15px;
+	color: red;
+	font-weight: bold;
+	padding-left: 4px;
+}
+
 .cb-label {
 	width: 10%;
 	font-family: arial;
@@ -43,6 +50,11 @@ body {
 	background-color: var(--cb-popup-fg);
 	border: 1px solid var(--cb-popup-fg);
 	border-radius: 8px;
+}
+
+.cb-btn:disabled {
+	color: var(--cb-popup-fg);
+	background-color: var(--cb-popup-bg);
 }
 
 .cb-control-align {

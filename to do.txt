@@ -1,6 +1,5 @@
-- remember state
+- remember state including selected comment
 - add configuration: 
-	username 
-	password? 
-	spreadsheetURL
 	instructions/reminders
+- auto-fill student name?
+- columns for tags

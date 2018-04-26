@@ -2,10 +2,12 @@
 
 function retrieveSettings(urlElem, searchElem, tagElem, callback)
 {
-	chrome.storage.sync.get(['cbURL', 'cbSearch', 'cbTags'], function(result) {
+	
+	chrome.storage.sync.get(['cbURL', 'cbSearch', 'cbTags', 'cbCommentIndex'], function(result) {
 		var urlString = '';
 		var searchString = '';
 		var tagString = '';
+		var commentIndex = 0;
 
 		if (typeof result.cbURL != 'undefined') {
 			urlString = result.cbURL;
@@ -16,8 +18,12 @@ function retrieveSettings(urlElem, searchElem, tagElem, callback)
 		if (typeof result.cbTags != 'undefined') {
 			tagString = result.cbTags;
 		}
+		if (typeof result.cbCommentIndex != 'undefined') {
+			commentIndex = result.cbCommentIndex;
+		}
 		
 		cbData.spreadsheetURL = urlString;
+		cbData.commentIndex = commentIndex;
 		urlElem.value = urlString;
 		searchElem.value = searchString;
 		tagElem.value = tagString;
@@ -27,14 +33,15 @@ function retrieveSettings(urlElem, searchElem, tagElem, callback)
 
 function storeSettings(urlElem, searchElem, tagElem, callback)
 {
-	console.log('storeSettings');
 	var keys = {
 		"cbURL": urlElem.value,
 		"cbSearch": searchElem.value, 
-		"cbTags": tagElem.value
+		"cbTags": tagElem.value,
+		"cbCommentIndex": cbData.commentIndex
 	};
+	
 	chrome.storage.sync.set(keys, function() {
-		if (callback !== null) {
+		if (callback != null) {
 			callback();
 		}
 	});
@@ -63,10 +70,16 @@ function getCommentSpreadsheetData(onSuccessFunc, onSuccessArgs, objResultData, 
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4) {
 			if (this.status == 200) {
+				hideError();
+				hideConfigureButton();
+				document.getElementById(cbData.configureButtonId).disabled = false;
 				onSuccessFunc(xhttp.response, onSuccessArgs, objResultData);
 				followingFunc();
 			} else {
-				alert('Unable to load file from: ' + spreadsheetURL);
+				//alert('Unable to load file from: ' + spreadsheetURL);
+				showError('Unable to load file from: ' + spreadsheetURL);
+				showConfigureButton();
+				document.getElementById(cbData.configureButtonId).disabled = true;
 			}
 		}
 	};

@@ -3,7 +3,10 @@
 var cbData = {
 	"spreadsheetURL": "",
 	"commentData": {},
+	"commentIndex": 0,
 
+	"errorWrapper": "spanError",
+	
 	"retrieveButtonId": "btnRetrieve",
 	"configureButtonId": "btnConfigure",
 	"configureSaveButtonId": "btnSaveURL",
@@ -72,6 +75,7 @@ $(document).ready(function() {
 });
 
 function loadTagData() {
+	clearAllData();
 	retrieveSettings(
 		document.getElementById(cbData.urlInputId), 
 		document.getElementById(cbData.commentSearchInputId), 
@@ -79,12 +83,27 @@ function loadTagData() {
 		function() {
 			if (cbData.spreadsheetURL == null || cbData.spreadsheetURL == '') {
 				handleConfigureButton();
-				alert('please enter spreadsheet URL');
+				showError("Please enter the spreadsheet URL and press 'Save'");
+				document.getElementById(cbData.configureButtonId).disabled = true;
 			} else {
+				hideError();
 				retrieveTagList(cbData.commentData, buildTagSelectHTML);
+				document.getElementById(cbData.configureButtonId).disabled = false;
 			}
 		}
 	)	
+}
+
+function clearAllData()
+{
+	cbData.commentData = {};
+	cbData.commentIndex = 0;
+	document.getElementById(cbData.commentSearchInputId).value = '';
+	document.getElementById(cbData.tagSearchInputId).value = '';
+	document.getElementById(cbData.tagSearchLabelId).innerHTML = '';
+
+	document.getElementById(cbData.tagSelectContentId).innerHTML = '';
+	document.getElementById(cbData.commentListId).innerHTML = '';
 }
 
 function buildTagSelectHTML()
@@ -114,8 +133,8 @@ function buildTagSelectHTML()
 		container.appendChild(label);
 		container.appendChild(document.createElement('br'));	
 		
-		handleRetrieveButton();
 	}
+	handleRetrieveButton();
 }
 
 function saveCurrentSettings(callback)
@@ -240,9 +259,24 @@ function handleConfigureButton()
 	}
 }
 
+function showConfigureButton()
+{
+	var clist = document.getElementById(cbData.urlContentId).classList;
+	if (clist.contains(cbData.visibilityClass)) {
+		clist.remove(cbData.visibilityClass);
+	}
+}
+
+function hideConfigureButton()
+{
+	var clist = document.getElementById(cbData.urlContentId).classList;
+	clist.add(cbData.visibilityClass);
+}
+
 function handleConfigureSaveButton()
 {
 	cbData.spreadsheetURL = document.getElementById(cbData.urlInputId).value;
+	cbData.commentIndex = 0;
 	document.getElementById(cbData.commentSearchInputId).value = '';
 	document.getElementById(cbData.tagSearchInputId).value = '';
 	saveCurrentSettings(function () {
@@ -269,8 +303,11 @@ function handleRetrieveButton()
 		}
 	}
 
-	retrieveComments(cbData.commentData, searchString, tagList, loadCommentList);
-	saveCurrentSettings(null);
+	retrieveComments(cbData.commentData, searchString, tagList, 
+		function() {
+			loadCommentList();
+			saveCurrentSettings(null);
+		});
 }
 
 function loadCommentList() {
@@ -291,15 +328,18 @@ function loadCommentList() {
 		elemWrapper.appendChild(elem);
 	}
 
-	$("#selComment").attr("size", Math.max(20, commentList.length + 1));
+	var elemIdCurrent = 'optComment' + ("00000" + cbData.commentIndex).slice(-5);
+	document.getElementById(elemIdCurrent).selected = true;
+	
+	$("#selComment").attr("size", 20);
 }
 
 function handleCommentChange() {
 	var option = currentOption('selComment');
 	var id = 'optComment' + option;
-	console.log('option=' + option + ' id=|' + id + "|");
 	var elem = document.getElementById(id);
-	console.log(elem.innerHTML);
+	cbData.commentIndex = parseInt(option);
+	saveCurrentSettings(null);
 	copyTextToClipboard(elem.innerHTML);
 }
 
@@ -308,9 +348,8 @@ function currentOption(id) {
 }
 
 function copyTextToClipboard(text) {
-	console.log('text=|' + text + '|');
 	var formattedText = formatTextFromMarkup(text);
-	console.log('formmattedText=|' + formattedText + '|');
+
 	$("#copyTarget").show();
 
 	$("#copyTarget").html(formattedText);
@@ -326,6 +365,10 @@ function formatTextFromMarkup(text) {
 	
 	var reader = new commonmark.Parser();
 	var writer = new commonmark.HtmlRenderer();
+	console.log('original text: |' + text + '|');
+	text = text.replaceAll(lineBreak, "\n");
+	console.log('line breaks: |' + text + '|');
+	
 	var parsed = reader.parse(text);
 
 	var walker = parsed.walker();
@@ -337,12 +380,14 @@ function formatTextFromMarkup(text) {
 	}	
 */
 	var result = writer.render(parsed);
+	console.log('after render: |' + result + '|');
 	result = emojifyString(result);
-	result = result.replaceAll(lineBreak, "<br/>");
 	result = result.replaceAll('<code>', codeblockspan);
+	result = result.replaceAll('<code class="language-function">', codeblockspan);
 	result = result.replaceAll('</code>', codeblockendspan);
 	result = result.replaceAll('\\t', pseudoTab);
 	result = emojifyString(result);
+	result = formatStrikeThroughString(result);
 
 	return result;
 }
@@ -352,9 +397,33 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.split(search).join(replacement);
 };
 
+function formatStrikeThroughString(originalString)
+{
+	var s = originalString;
+	
+    var pattern = /\~\~[^~]*\~\~/g;
+		
+	var result;
+	while ( (result = pattern.exec(s)) !== null) {
+		s = s.substring(0, result.index) + '<s>' + result.toString().slice(2, -2) + '</s>' + s.substring(pattern.lastIndex);
+	}
+
+	return s;
+}
 
 function showError(strError) {
-	$("#spanError").html('<b> Error - ' + strError + '</b>');
+	var elemWrapper = document.getElementById(cbData.errorWrapper);
+	var clist = elemWrapper.classList;
+
+	elemWrapper.innerHTML = strError;
+	if (clist.contains(cbData.visibilityClass)) {
+		clist.remove(cbData.visibilityClass);
+	}
+}
+
+function hideError() {
+	var clist = document.getElementById(cbData.errorWrapper).classList;
+	clist.add(cbData.visibilityClass);
 }
 
 function validTag(tagval)
