@@ -12,27 +12,42 @@
 
     <table>
       <tr class='cb-row'>
-        <td class='cb-label'> Search &#x1F42A; </td>
+        <td>  </td>
+        <td class='cb-data cb-control-align'>
+          <button id='btnRetrieve' class='cb-btn cb-control-btn'> retrieve </button> 
+          <button id='btnConfigure' class='cb-btn cb-control-btn'> configure </button> 
+		</td>
+		<td>
+		</td>
+      </tr>
+
+      <tr id='urlContent' class='cb-row'>
+        <td class='cb-label'> URL </td>
+        <td class='cb-data'>
+          <input id='inputCommentURL' type='text' class='cb-configure' maxlength=200> 
+		  <button id='btnSaveURL' class='cb-btn'> save </button>
+		</td>
+      </tr>
+            
+      <tr class='cb-row'>
+        <td class='cb-label'> Search </td>
         <td class='cb-data'>
           <input id='inputCommentSearch' type='text' class='cb-comment-search' maxlength=80> 
 		</td>
+		<td>
+		</td>
       </tr>
-      
+            
       <tr class='cb-row'>
-        <td class='cb-label'> Tags </td>
+        <td class='cb-label cb-tag-align'> Tags </td>
         <td class='cb-data'> 
 			<input id='inputTagSearch' type='text' class='cb-tag-search' maxlength=80> 
 			<label id='labelTagSearch' class='cb-tagsearch-label' for='inputCommentSearch'> xxx </label>
-			<button id='btnTagOpenClose' class='cb-btn'>  </button>
 			<div id='tagSelectContent' class='cb-tag-selection-area hide-me'> </div>
 		</td>
-      </tr>
-	
-      <tr class='cb-row'>
-        <td> 
-			<button id='btnRetrieve' class='cb-align-right'> go </button>
+		<td class='cb-tag-align'>
+			<button id='btnTagOpenClose' class='cb-btn'>  </button>
 		</td>
-		<td> </td>
       </tr>
 
 	  <tr>

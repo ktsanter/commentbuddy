@@ -1,11 +1,15 @@
 "use strict";
 
-function retrieveSettings(searchElem, tagElem, callback)
+function retrieveSettings(urlElem, searchElem, tagElem, callback)
 {
-	chrome.storage.sync.get(['cbSearch', 'cbTags'], function(result) {
+	chrome.storage.sync.get(['cbURL', 'cbSearch', 'cbTags'], function(result) {
+		var urlString = '';
 		var searchString = '';
 		var tagString = '';
 
+		if (typeof result.cbURL != 'undefined') {
+			urlString = result.cbURL;
+		}
 		if (typeof result.cbSearch != 'undefined') {
 			searchString = result.cbSearch;
 		}
@@ -13,40 +17,60 @@ function retrieveSettings(searchElem, tagElem, callback)
 			tagString = result.cbTags;
 		}
 		
+		cbData.spreadsheetURL = urlString;
+		urlElem.value = urlString;
 		searchElem.value = searchString;
 		tagElem.value = tagString;
 		callback();
     });
 }
 
-function storeSettings(searchElem, tagElem)
+function storeSettings(urlElem, searchElem, tagElem, callback)
 {
-	var keys = {"cbSearch": searchElem.value, "cbTags": tagElem.value};
-	chrome.storage.sync.set(keys, function() {});
+	console.log('storeSettings');
+	var keys = {
+		"cbURL": urlElem.value,
+		"cbSearch": searchElem.value, 
+		"cbTags": tagElem.value
+	};
+	chrome.storage.sync.set(keys, function() {
+		if (callback !== null) {
+			callback();
+		}
+	});
 }
 
 function retrieveTagList(objResultData, followingFunc)
 {
+	cbData.tagarray = [];
+	cbData.tagset = new Set();
+	cbData.commentList = [];
 	getCommentSpreadsheetData(parseTagData, null, objResultData, followingFunc);
 }
 
 function retrieveComments(objResultData, searchString, tagSearchList, followingFunc)
 {
 	var args = {"searchstring": searchString, "tagsearchlist": tagSearchList};
+	cbData.commentList = [];
 	getCommentSpreadsheetData(getMatchingComments, args, objResultData, followingFunc);
 }
 
 function getCommentSpreadsheetData(onSuccessFunc, onSuccessArgs, objResultData, followingFunc)
 {
-	var spreadsheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/pub?output=tsv'
+	var spreadsheetURL = cbData.spreadsheetURL;
 	var xhttp = new XMLHttpRequest();
 	
 	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			onSuccessFunc(xhttp.response, onSuccessArgs, objResultData);
-			followingFunc();
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				onSuccessFunc(xhttp.response, onSuccessArgs, objResultData);
+				followingFunc();
+			} else {
+				alert('Unable to load file from: ' + spreadsheetURL);
+			}
 		}
 	};
+	
 	xhttp.open("GET", spreadsheetURL, true);
 	xhttp.send();
 }

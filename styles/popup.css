@@ -41,15 +41,28 @@ body {
 .cb-btn {
 	color: var(--cb-popup-bg);
 	background-color: var(--cb-popup-fg);
+	border: 1px solid var(--cb-popup-fg);
 	border-radius: 8px;
 }
 
+.cb-control-align {
+	text-align: left;
+}
+
+.cb-tag-align {
+	vertical-align: top;
+}
+
+.cb-configure{
+	width: 85%;
+}
+
 .cb-comment-search{
-	width: 90%;
+	width: 100%;
 }
 
 .cb-tag-search {
-	width: 90%;
+	width: 100%;
 }
 
 .cb-tagsearch-label {
