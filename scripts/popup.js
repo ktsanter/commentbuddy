@@ -394,6 +394,8 @@ function copyTextToClipboard(text) {
 function formatTextFromMarkup(text) {
 	var codeblockspan = "<span style=\"font-family: 'courier new', courier;\">";
 	var codeblockendspan = '</span>';
+	var highlightspan = "<span style=\"background-color: #FFFF00\">";
+	var hightlightendspan = '</span>';
 	var lineBreak = "|";
 	var pseudoTab = "&nbsp;&nbsp;&nbsp;";
 	
@@ -421,8 +423,9 @@ function formatTextFromMarkup(text) {
 	result = result.replaceAll('</code>', codeblockendspan);
 	result = result.replaceAll('\\t', pseudoTab);
 	result = emojifyString(result);
-	result = formatStrikeThroughString(result);
-
+	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, '<s>', '</s>'); 
+	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, highlightspan, hightlightendspan); 
+	console.log('formatted comment = |' + result + '|');
 	return result;
 }
 
@@ -431,15 +434,13 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.split(search).join(replacement);
 };
 
-function formatStrikeThroughString(originalString)
+function extraMarkdownReplaceAll(originalString, pattern, opentoken, closetoken)
 {
 	var s = originalString;
-	
-    var pattern = /\~\~[^~]*\~\~/g;
-		
 	var result;
+	
 	while ( (result = pattern.exec(s)) !== null) {
-		s = s.substring(0, result.index) + '<s>' + result.toString().slice(2, -2) + '</s>' + s.substring(pattern.lastIndex);
+		s = s.substring(0, result.index) + opentoken + result.toString().slice(2, -2) + closetoken + s.substring(pattern.lastIndex);
 	}
 
 	return s;
