@@ -23,8 +23,11 @@ var cbData = {
 	"tagSelectId": "cbTagSelect",
 	"tagSelectClass": "cb-tag-select",
 	
-	
 	"commentListId" : "selComment",
+	"commentListOptionBaseId" : "optComment",
+	
+	"clipboardCopyBtn": "btnCopy",
+	"clipboardCopyTarget": "copyTarget",
 	
 	"visibilityClass": "hide-me",
 	
@@ -66,12 +69,10 @@ $(document).ready(function() {
 	
 	loadTagData();
 
-	$("#selComment").change(function() {
-		handleCommentChange();
-	});
-	
-	$("#copyTarget").hide();
-	new Clipboard('#btnCopy');
+	$("#" + cbData.commentListId).change(handleCommentChange);
+		
+	$("#" + cbData.clipboardCopyTarget).hide();
+	new Clipboard('#' + cbData.clipboardCopyBtn);
 });
 
 function loadTagData() {
@@ -114,6 +115,7 @@ function buildTagSelectHTML()
 
 	var elemTable = document.createElement('table');
 	var elemRow = [];
+
 	for (var i = 0; i < maxTagsInColumn; i++) {
 		elemRow[i] = document.createElement('tr');
 		elemTable.appendChild(elemRow[i]);
@@ -121,6 +123,7 @@ function buildTagSelectHTML()
 	
 	for (var i = 0; i < cbData.commentData.tagarray.length; i++) {
 		var elemCell = document.createElement('td');
+		elemCell.style = "min-width: 120px";
 		
 		var selectId = selectName + ("0000" + i).slice(-4);
 		var tagval = cbData.commentData.tagarray[i];
@@ -321,7 +324,7 @@ function handleRetrieveButton()
 	retrieveComments(cbData.commentData, searchString, tagList, 
 		function() {
 			loadCommentList();
-			saveCurrentSettings(null);
+			saveCurrentSettings(scrollToComment);
 		});
 }
 
@@ -336,7 +339,7 @@ function loadCommentList() {
 	for (var i = 0; i < commentList.length; i++) {
 		var elem = document.createElement('option');
 		var sIndex = ("00000" + i).slice(-5);
-		elem.id = 'optComment' + sIndex;
+		elem.id = cbData.commentListOptionBaseId + sIndex;
 		elem.text = commentList[i];
 		elem.value = sIndex;
 		elem.selected = false;
@@ -344,19 +347,29 @@ function loadCommentList() {
 	}
 
 	if (cbData.commentIndex >= 0) {
-		var elemIdCurrent = 'optComment' + ("00000" + cbData.commentIndex).slice(-5);
-		document.getElementById(elemIdCurrent).selected = true;	
+		var val = ("00000" + cbData.commentIndex).slice(-5);
+		var elemIdCurrent = cbData.commentListOptionBaseId + val;
+		var elemCurrent = document.getElementById(elemIdCurrent);
+		elemCurrent.selected = true;	
 		handleCommentChange();
 	}
 	
-	$("#selComment").attr("size", 20);
+	$("#" + cbData.commentListId).attr("size", 20);
+}
+
+function scrollToComment()
+{
+	var option = currentOption(cbData.commentListId);
+	var id = cbData.commentListOptionBaseId + option;
+	var elem = document.getElementById(id);
+	elem.scrollIntoView();
 }
 
 function handleCommentChange() {
-	var option = currentOption('selComment');
-	var id = 'optComment' + option;
+	var option = currentOption(cbData.commentListId);
+	var id = cbData.commentListOptionBaseId + option;
 	var elem = document.getElementById(id);
-	console.log("handleCommentChange: "	+ id);
+
 	cbData.commentIndex = parseInt(option);
 	saveCurrentSettings(null);
 	copyTextToClipboard(elem.innerHTML);
@@ -368,12 +381,14 @@ function currentOption(id) {
 
 function copyTextToClipboard(text) {
 	var formattedText = formatTextFromMarkup(text);
+	var target = "#" + cbData.clipboardCopyTarget;
+	var btn = "#" + cbData.clipboardCopyBtn;
 
-	$("#copyTarget").show();
+	$(target).show();
 
-	$("#copyTarget").html(formattedText);
-	$("#btnCopy").click();
-	$("#copyTarget").hide();
+	$(target).html(formattedText);
+	$(btn).click();
+	$(target).hide();
 }
 
 function formatTextFromMarkup(text) {
@@ -384,9 +399,9 @@ function formatTextFromMarkup(text) {
 	
 	var reader = new commonmark.Parser();
 	var writer = new commonmark.HtmlRenderer();
-	console.log('original text: |' + text + '|');
+	console.log('format: original text: |' + text + '|');
 	text = text.replaceAll(lineBreak, "\n");
-	console.log('line breaks: |' + text + '|');
+	//console.log('line breaks: |' + text + '|');
 	
 	var parsed = reader.parse(text);
 
@@ -399,7 +414,7 @@ function formatTextFromMarkup(text) {
 	}	
 */
 	var result = writer.render(parsed);
-	console.log('after render: |' + result + '|');
+	//console.log('after render: |' + result + '|');
 	result = emojifyString(result);
 	result = result.replaceAll('<code>', codeblockspan);
 	result = result.replaceAll('<code class="language-function">', codeblockspan);

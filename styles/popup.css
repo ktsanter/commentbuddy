@@ -4,7 +4,7 @@
 }
 
 body {
-	overflow-x: scroll;
+	overflow-x: auto;
 	width: 600px;
 	height: 500px;
 	margin:0;
@@ -78,18 +78,19 @@ body {
 }
 
 .cb-tagsearch-label {
-	width: 90%;
+	width: 100%;
 	color: black;
 	display: inline-block;
 	background-color: var(--cb-popup-bg);
 	border: 1px solid var(--cb-popup-fg);
 	font-size: 13px;
+	margin-bottom: 10px;
 }
 
 .cb-tag-selection-area {
 	border: 1px solid var(--cb-popup-fg);
-	overflow-x: scroll;
-	overflow-y: auto;
+	overflow-x:scroll; 
+	width: 500px;
 }
 
 .cb-comment-select {

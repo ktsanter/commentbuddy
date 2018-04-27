@@ -24,7 +24,6 @@ function retrieveSettings(urlElem, searchElem, tagElem, callback)
 		
 		cbData.spreadsheetURL = urlString;
 		cbData.commentIndex = commentIndex;
-		console.log('retrieved: ' + cbData.commentIndex);
 		urlElem.value = urlString;
 		searchElem.value = searchString;
 		tagElem.value = tagString;
