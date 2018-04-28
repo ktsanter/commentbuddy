@@ -1,4 +1,10 @@
-- add configuration: 
-	instructions/reminders
-- auto-fill student name?
-- columns for tags
+JQuery vs vanilla JS
+
+Doc:
+- instructions
+- format info for spreadsheet
+- markdown doco and examples
+
+download site on GitHub
+
+build out emoji list

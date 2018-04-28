@@ -359,10 +359,12 @@ function loadCommentList() {
 
 function scrollToComment()
 {
-	var option = currentOption(cbData.commentListId);
-	var id = cbData.commentListOptionBaseId + option;
-	var elem = document.getElementById(id);
-	elem.scrollIntoView();
+	if (cbData.commentListId >= 0) {
+		var option = currentOption(cbData.commentListId);
+		var id = cbData.commentListOptionBaseId + option;
+		var elem = document.getElementById(id);
+		elem.scrollIntoView();
+	}
 }
 
 function handleCommentChange() {
@@ -397,35 +399,25 @@ function formatTextFromMarkup(text) {
 	var highlightspan = "<span style=\"background-color: #FFFF00\">";
 	var hightlightendspan = '</span>';
 	var lineBreak = "|";
-	var pseudoTab = "&nbsp;&nbsp;&nbsp;";
 	
 	var reader = new commonmark.Parser();
 	var writer = new commonmark.HtmlRenderer();
 	console.log('format: original text: |' + text + '|');
 	text = text.replaceAll(lineBreak, "\n");
-	//console.log('line breaks: |' + text + '|');
-	
+	console.log('pre-processed: |' + text + '|');
 	var parsed = reader.parse(text);
 
-	var walker = parsed.walker();
-	var event, node;
-/*
-	while ((event = walker.next())) {
-	  node = event.node;
-	  console.log('type=' + node.type + ' literal=' + node.literal + ' info=' + node.info);
-	}	
-*/
 	var result = writer.render(parsed);
-	//console.log('after render: |' + result + '|');
 	result = emojifyString(result);
 	result = result.replaceAll('<code>', codeblockspan);
 	result = result.replaceAll('<code class="language-function">', codeblockspan);
 	result = result.replaceAll('</code>', codeblockendspan);
-	result = result.replaceAll('\\t', pseudoTab);
+
 	result = emojifyString(result);
 	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, '<s>', '</s>'); 
 	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, highlightspan, hightlightendspan); 
 	console.log('formatted comment = |' + result + '|');
+
 	return result;
 }
 

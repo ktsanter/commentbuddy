@@ -2,27 +2,27 @@
 
 //https://unicode.org/emoji/charts/full-emoji-list.html#1f410
 var emojifierData = {
-	"calendar": "&#x1F4C6;",
-	"pencil": "&#x270F;",
-	"megaphone": "&#x1F4E3;",
-	"trophy": "&#x1F3C6;",
-	"rainbow": "&#x1F308;",
-	"stop sign": "&#x1F6D1;",
-	"glasses": "&#x1F453;",
-	"thumbs up": "&#x1F44D;",
-	"thumbs down": "&#x1F44E;",
-	"poop": "&#x1F4A9;",
-	"alien": "&#x1F47D;",
-	"frowning face": "&#x2639;",
-	"smiling face with sunglasses": "&#x1F60E;",
-	"grinning face": "&#x1F600;",
-	"winking face": "&#x1F609;",
-	"smiling face": "&#x263A;",
-	"zebra": "&#x1F993;",
-	"pig": "&#x1F437;",
-	"goat": "&#x1F410;",
-	"camel": "&#x1F42A;",
-	"rocket": "&#x1F680;"
+	"calendar": "&amp;#x1F4C6;",
+	"pencil": "&amp;#x270F;",
+	"megaphone": "&amp;#x1F4E3;",
+	"trophy": "&amp;#x1F3C6;",
+	"rainbow": "&amp;#x1F308;",
+	"stop sign": "&amp;#x1F6D1;",
+	"glasses": "&amp;#x1F453;",
+	"thumbs up": "&amp;#x1F44D;",
+	"thumbs down": "&amp;#x1F44E;",
+	"poop": "&amp;#x1F4A9;",
+	"alien": "&amp;#x1F47D;",
+	"frowning face": "&amp;#x2639;",
+	"smiling face with sunglasses": "&amp;#x1F60E;",
+	"grinning face": "&amp;#x1F600;",
+	"winking face": "&amp;#x1F609;",
+	"smiling face": "&amp;#x263A;",
+	"zebra": "&amp;#x1F993;",
+	"pig": "&amp;#x1F437;",
+	"goat": "&amp;#x1F410;",
+	"camel": "&amp;#x1F42A;",
+	"rocket": "&amp;#x1F680;"
 };
 
 function emojifyString(originalString)

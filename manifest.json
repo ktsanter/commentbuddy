@@ -15,9 +15,5 @@
   ],
   "icons": {
      "16": "cb.png"
-   },
-   "options_ui": {
-    "page": "options.html",
-    "chrome_style": true
    }
 }
