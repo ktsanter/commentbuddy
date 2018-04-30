@@ -1,5 +1,3 @@
-JQuery vs vanilla JS
-
 Doc:
 - instructions
 - format info for spreadsheet
