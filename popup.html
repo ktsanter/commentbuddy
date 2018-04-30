@@ -13,23 +13,46 @@
       <tr class='cb-row'>
         <td>  </td>
         <td class='cb-data cb-control-align'>
-          <button id='btnRetrieve' class='cb-btn cb-control-btn'> retrieve </button> 
-          <button id='btnConfigure' class='cb-btn cb-control-btn'> configure </button> 
+          <button id='btnRetrieve' class='cb-btn cb-control-btn' title='retrieve comments matching the search string with the selected tags'> retrieve </button> 
+          <button id='btnConfigure' class='cb-btn cb-control-btn' title='specify the Google Sheet to work with'> configure </button> 
 		</td>
 		<td>
 		</td>
       </tr>
 
       <tr id='urlContent' class='cb-row'>
-        <td class='cb-label'> URL </td>
+        <td class='cb-label'> 
+			<div class='tooltip'> 
+				URL
+				<span class='cb-info-icon tooltiptext'>  
+					Enter the published URL of a Google Sheets document.
+					<ul>
+						<li> The first column should contain comma-separated tag values </li>
+						<li> The second column should contain the comment corresponding to the tags </li>
+						<li> The spreadsheet must be published in 'Tab-separated values (.tsv)' format </li>
+					</ul>
+					You can find an example by right-clicking 
+					<a class='cb-tip-link' href='https://drive.google.com/open?id=1Rpkdp3Zxu_RdweCGbsDvJD7qGl5KFTjlFDrnMQDV1Og'>here</a> 
+					and opening the link 
+				</span>
+			</div>
+		</td>
         <td class='cb-data'>
           <input id='inputCommentURL' type='text' class='cb-configure' maxlength=200> 
-		  <button id='btnSaveURL' class='cb-btn'> save </button>
+		  <button id='btnSaveURL' class='cb-btn' title='save the worksheet URL'> save </button>
 		</td>
       </tr>
             
       <tr class='cb-row'>
-        <td class='cb-label'> Search </td>
+        <td class='cb-label'> 
+			<div class='tooltip'> 
+				Search 
+				<span class='cb-info-icon tooltiptext'>  
+					Enter a string to search for in the comments here. <br>
+					Only comments containing exact matches of the text will be retrieved
+				</span>
+			</div>
+		</td>
         <td class='cb-data'>
           <input id='inputCommentSearch' type='text' class='cb-comment-search' maxlength=80> 
 		</td>
@@ -38,14 +61,22 @@
       </tr>
             
       <tr class='cb-row'>
-        <td class='cb-label cb-tag-align'> Tags </td>
+        <td class='cb-label cb-tag-align'> 
+			<div class='tooltip'> 
+				Tags 
+				<span class='cb-info-icon tooltiptext'>  
+					Enter tags separated by spaces <br>
+					Only comments with all of the tags will be retrieved
+				</span>
+			</div>
+		</td>
         <td class='cb-data'> 
 			<input id='inputTagSearch' type='text' class='cb-tag-search' maxlength=80> 
 			<label id='labelTagSearch' class='cb-tagsearch-label' for='inputCommentSearch'> xxx </label>
 			<div id='tagSelectContent' class='cb-tag-selection-area'> </div>
 		</td>
 		<td class='cb-tag-align'>
-			<button id='btnTagOpenClose' class='cb-btn'>  </button>
+			<button id='btnTagOpenClose' class='cb-btn' title='show/hide checkboxes for tags'>  </button>
 		</td>
       </tr>
 
