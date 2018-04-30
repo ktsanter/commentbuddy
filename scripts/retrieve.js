@@ -1,8 +1,7 @@
 "use strict";
 
-function retrieveSettings(urlElem, searchElem, tagElem, callback)
+function retrieveSettings(callback)
 {
-	
 	chrome.storage.sync.get(['cbURL', 'cbSearch', 'cbTags', 'cbCommentIndex'], function(result) {
 		var urlString = '';
 		var searchString = '';
@@ -24,19 +23,19 @@ function retrieveSettings(urlElem, searchElem, tagElem, callback)
 		
 		cbData.spreadsheetURL = urlString;
 		cbData.commentIndex = commentIndex;
-		urlElem.value = urlString;
-		searchElem.value = searchString;
-		tagElem.value = tagString;
+		$(cbData.urlInputId).val(urlString);
+		$(cbData.commentSearchInputId).val(searchString);
+		$(cbData.tagSearchInputId).val(tagString);
 		callback();
     });
 }
 
-function storeSettings(urlElem, searchElem, tagElem, callback)
+function storeSettings(callback)
 {
 	var keys = {
-		"cbURL": urlElem.value,
-		"cbSearch": searchElem.value, 
-		"cbTags": tagElem.value,
+		"cbURL": $(cbData.urlInputId).val(),
+		"cbSearch": $(cbData.commentSearchInputId).val(), 
+		"cbTags": $(cbData.tagSearchInputId).val(),
 		"cbCommentIndex": cbData.commentIndex
 	};
 	
@@ -71,15 +70,14 @@ function getCommentSpreadsheetData(onSuccessFunc, onSuccessArgs, objResultData, 
 		if (this.readyState == 4) {
 			if (this.status == 200) {
 				hideError();
-				hideConfigureButton();
-				document.getElementById(cbData.configureButtonId).disabled = false;
+				hideConfigureInput();
+				$(cbData.configureButtonId).removeAttr("disabled");
 				onSuccessFunc(xhttp.response, onSuccessArgs, objResultData);
 				followingFunc();
 			} else {
-				//alert('Unable to load file from: ' + spreadsheetURL);
 				showError('Unable to load file from: ' + spreadsheetURL);
-				showConfigureButton();
-				document.getElementById(cbData.configureButtonId).disabled = true;
+				$(cbData.configureButtonId).prop("disabled", true);
+				showConfigureInput();
 			}
 		}
 	};

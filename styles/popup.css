@@ -79,6 +79,7 @@ body {
 
 .cb-tagsearch-label {
 	width: 100%;
+	height: 20px;
 	color: black;
 	display: inline-block;
 	background-color: var(--cb-popup-bg);
@@ -107,10 +108,6 @@ body {
 	color: var(--cb-popup-bg);
 	background-color: var(--cb-popup-fg);
 	border-radius: 8px;
-}
-
-.hide-me {
-	display:none;
 }
 
 .cb-formatted-comment {

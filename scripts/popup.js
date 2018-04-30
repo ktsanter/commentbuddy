@@ -5,31 +5,29 @@ var cbData = {
 	"commentData": {},
 	"commentIndex": -1,
 
-	"errorWrapper": "spanError",
+	"errorWrapper": "#spanError",
 	
-	"retrieveButtonId": "btnRetrieve",
-	"configureButtonId": "btnConfigure",
-	"configureSaveButtonId": "btnSaveURL",
+	"retrieveButtonId": "#btnRetrieve",
+	"configureButtonId": "#btnConfigure",
+	"configureSaveButtonId": "#btnSaveURL",
 	
-	"urlContentId": "urlContent",
-	"urlInputId": "inputCommentURL",
+	"urlContentId": "#urlContent",
+	"urlInputId": "#inputCommentURL",
 	
-	"commentSearchInputId": "inputCommentSearch",
+	"commentSearchInputId": "#inputCommentSearch",
 	
-	"tagSearchInputId": "inputTagSearch",
-	"tagSearchLabelId": "labelTagSearch",
-	"tagSelectButtonId": "btnTagOpenClose",
-	"tagSelectContentId": "tagSelectContent",
+	"tagSearchInputId": "#inputTagSearch",
+	"tagSearchLabelId": "#labelTagSearch",
+	"tagSelectButtonId": "#btnTagOpenClose",
+	"tagSelectContentId": "#tagSelectContent",
 	"tagSelectId": "cbTagSelect",
 	"tagSelectClass": "cb-tag-select",
 	
-	"commentListId" : "selComment",
-	"commentListOptionBaseId" : "optComment",
+	"commentListId" : "#selComment",
+	"commentListOptionBaseId" : "optComment", // note no jQuery selector symbol
 	
-	"clipboardCopyBtn": "btnCopy",
-	"clipboardCopyTarget": "copyTarget",
-	
-	"visibilityClass": "hide-me",
+	"clipboardCopyBtn": "#btnCopy",
+	"clipboardCopyTarget": "#copyTarget",
 	
 	"caretCharacter": {
 		"up":  "&#9650;",
@@ -38,58 +36,61 @@ var cbData = {
 };
 
 $(document).ready(function() {	
-	document.getElementById(cbData.urlContentId).classList.add(cbData.visibilityClass);
-	document.getElementById(cbData.tagSearchLabelId).classList.add(cbData.visibilityClass);
-	document.getElementById(cbData.commentSearchInputId).addEventListener('keyup', function(e) {
+	hideError();
+		
+	$(cbData.urlContentId).hide();
+	$(cbData.tagSearchLabelId).hide();
+	$(cbData.tagSelectContentId).hide();
+	$(cbData.clipboardCopyTarget).hide();
+	$(cbData.clipboardCopyBtn).hide();
+	
+	new Clipboard(cbData.clipboardCopyBtn);
+
+	$(cbData.commentSearchInputId).keyup(function(e) {
 		handleInputKeyUp(this, e);
 	});
 	
-	var elemTagBlockOpenClose = document.getElementById(cbData.tagSelectButtonId);
-	elemTagBlockOpenClose.innerHTML = cbData.caretCharacter.down;
-	elemTagBlockOpenClose.addEventListener('click', function() {
+	var elemTagBlockOpenClose = $(cbData.tagSelectButtonId);
+	elemTagBlockOpenClose.html(cbData.caretCharacter.down);
+	elemTagBlockOpenClose.click(function() {
 		handleTagBlockOpenClose(this)
 	});
 	
-	document.getElementById(cbData.tagSearchInputId).addEventListener('click', function() {
+	$(cbData.tagSearchInputId).click(function() {
 		handleTagSearchInputClick(this);
 	});	
-	document.getElementById(cbData.tagSearchInputId).addEventListener('keyup', function(e) {
+	$(cbData.tagSearchInputId).keyup(function(e) {
 		handleInputKeyUp(this, e);
 	});
 
-	document.getElementById(cbData.retrieveButtonId).addEventListener('click', function() {
+	$(cbData.retrieveButtonId).click(function() {
 		handleRetrieveButton();
 	});
-	document.getElementById(cbData.configureButtonId).addEventListener('click', function() {
+	$(cbData.configureButtonId).click(function() {
 		handleConfigureButton();
 	});
-	document.getElementById(cbData.configureSaveButtonId).addEventListener('click', function() {
+	$(cbData.configureSaveButtonId).click(function() {
 		handleConfigureSaveButton();
 	});
 	
 	loadTagData();
 
-	$("#" + cbData.commentListId).change(handleCommentChange);
+	$(cbData.commentListId).change(handleCommentChange);
 		
-	$("#" + cbData.clipboardCopyTarget).hide();
-	new Clipboard('#' + cbData.clipboardCopyBtn);
 });
 
 function loadTagData() {
 	clearAllData();
 	retrieveSettings(
-		document.getElementById(cbData.urlInputId), 
-		document.getElementById(cbData.commentSearchInputId), 
-		document.getElementById(cbData.tagSearchInputId), 
 		function() {
 			if (cbData.spreadsheetURL == null || cbData.spreadsheetURL == '') {
 				handleConfigureButton();
 				showError("Please enter the spreadsheet URL and press 'Save'");
-				document.getElementById(cbData.configureButtonId).disabled = true;
+				$(cbData.configureButtonId).prop("disabled",true);
 			} else {
 				hideError();
 				retrieveTagList(cbData.commentData, buildTagSelectHTML);
-				document.getElementById(cbData.configureButtonId).disabled = false;
+				$(cbData.configureButtonId).removeAttr("disabled");
 			}
 		}
 	)	
@@ -99,18 +100,18 @@ function clearAllData()
 {
 	cbData.commentData = {};
 	cbData.commentIndex = -1;
-	document.getElementById(cbData.commentSearchInputId).value = '';
-	document.getElementById(cbData.tagSearchInputId).value = '';
-	document.getElementById(cbData.tagSearchLabelId).innerHTML = '';
+	$(cbData.commentSearchInputId).val('');	
+	$(cbData.tagSearchInputId).val('');
+	$(cbData.tagSearchLabelId).html('');
 
-	document.getElementById(cbData.tagSelectContentId).innerHTML = '';
-	document.getElementById(cbData.commentListId).innerHTML = '';
+	$(cbData.tagSelectContentId).html('');
+	$(cbData.commentListId).html('');
 }
 
 function buildTagSelectHTML()
 {
 	var maxTagsInColumn = 16;
-	var container = document.getElementById(cbData.tagSelectContentId);
+	var container = $(cbData.tagSelectContentId);
 	var selectName = cbData.tagSelectId;
 
 	var elemTable = document.createElement('table');
@@ -148,37 +149,34 @@ function buildTagSelectHTML()
 		
 	}
 	
-	container.appendChild(elemTable);
+	container.append(elemTable);
 	handleRetrieveButton();
 }
 
 function saveCurrentSettings(callback)
 {
-	var elemConfigURL = document.getElementById(cbData.urlInputId);
-	var elemSearch = document.getElementById(cbData.commentSearchInputId);
-	var elemTag = document.getElementById(cbData.tagSearchInputId);
-	storeSettings(elemConfigURL, elemSearch, elemTag, callback);
+	storeSettings(callback);
 }
 
 function handleTagBlockOpenClose(btn)
 {
-	var elemWrapper = document.getElementById(cbData.tagSelectContentId);
-	var elemSearch = document.getElementById(cbData.tagSearchInputId);
-	var elemLabel = document.getElementById(cbData.tagSearchLabelId);
-	var elemComment = document.getElementById(cbData.commentListId);
+	var elemWrapper = $(cbData.tagSelectContentId);
+	var elemSearch = $(cbData.tagSearchInputId);
+	var elemLabel = $(cbData.tagSearchLabelId);
+	var elemComment = $(cbData.commentListId);
 
-	toggleClassForElement(elemWrapper, cbData.visibilityClass);
+	elemWrapper.toggle();
 	if (isVisible(elemWrapper)) {
 		btn.innerHTML = cbData.caretCharacter.up;
 		setTagSelectionsToMatchSearch();
-		elemSearch.classList.add(cbData.visibilityClass);
-		elemLabel.classList.remove(cbData.visibilityClass);
-		elemComment.classList.add(cbData.visibilityClass);
+		elemSearch.hide();
+		elemLabel.show();
+		elemComment.hide();
 	} else {
 		btn.innerHTML = cbData.caretCharacter.down;
-		elemSearch.classList.remove(cbData.visibilityClass);
-		elemLabel.classList.add(cbData.visibilityClass);
-		elemComment.classList.remove(cbData.visibilityClass);
+		elemSearch.show();
+		elemLabel.hide();
+		elemComment.show();
 		cbData.commentIndex = -1;
 		handleRetrieveButton();
 	}		
@@ -186,8 +184,8 @@ function handleTagBlockOpenClose(btn)
 
 function handleTagSearchInputClick(elem)
 {
-	if (isVisible(document.getElementById(cbData.tagSelectContentId))) {
-		handleTagBlockOpenClose(document.getElementById(cbData.tagSelectButtonId));
+	if (isVisible($(cbData.tagSelectContentId))) {
+		handleTagBlockOpenClose($(cbData.tagSelectButtonId));
 	}
 }
 
@@ -199,8 +197,9 @@ function handleTagClick(elem)
 function setTagInfoToMatchSelections()
 {
 	var s = makeStringFromTagSelections();
-	document.getElementById(cbData.tagSearchLabelId).innerHTML = s;
-	document.getElementById(cbData.tagSearchInputId).value = s;
+	console.log('s=' + s);
+	$(cbData.tagSearchLabelId).html(s);
+	$(cbData.tagSearchInputId).val(s);
 }
 
 function makeStringFromTagSelections()
@@ -224,10 +223,10 @@ function makeStringFromTagSelections()
 
 function setTagSelectionsToMatchSearch()
 {
-	var elemTagSearch = document.getElementById(cbData.tagSearchInputId);
-	var elemTagLabel = document.getElementById(cbData.tagSearchLabelId);
+	var elemTagSearch = $(cbData.tagSearchInputId);
+	var elemTagLabel = $(cbData.tagSearchLabelId);
 	
-	var tagSearchList = elemTagSearch.value.split(" ");
+	var tagSearchList = elemTagSearch.val().split(" ");
 	var tagSet = new Set();
 	for (var i = 0; i < tagSearchList.length; i++) {
 		tagSet.add(tagSearchList[i]);
@@ -251,9 +250,9 @@ function setTagSelectionsToMatchSearch()
 	}
 
 	if (sInvalid.length < 1 && sValid.length < 1) {
-		elemTagLabel.innerHTML = "&nbsp;";
+		elemTagLabel.html("&nbsp;");
 	} else {
-		elemTagLabel.innerHTML = sValid + " " + sInvalid;
+		elemTagLabel.html(sValid + " " + sInvalid);
 	}
 	elemTagSearch.value = sValid;
 }
@@ -268,49 +267,44 @@ function handleInputKeyUp(elem, e)
 
 function handleConfigureButton()
 {
-	var clist = document.getElementById(cbData.urlContentId).classList;
-	if (clist.contains(cbData.visibilityClass)) {
-		clist.remove(cbData.visibilityClass);
-	} else {
-		clist.add(cbData.visibilityClass);
-		document.getElementById(cbData.urlInputId).value = cbData.spreadsheetURL;
+	var sel = $(cbData.urlContentId);
+	sel.toggle();
+	if (sel.is(":visible")) {
+		sel.value = cbData.spreadsheetURL;
 	}
 }
 
-function showConfigureButton()
+function showConfigureInput()
 {
-	var clist = document.getElementById(cbData.urlContentId).classList;
-	if (clist.contains(cbData.visibilityClass)) {
-		clist.remove(cbData.visibilityClass);
-	}
+	$(cbData.urlContentId).show();
 }
 
-function hideConfigureButton()
+function hideConfigureInput()
 {
-	var clist = document.getElementById(cbData.urlContentId).classList;
-	clist.add(cbData.visibilityClass);
+	$(cbData.urlContentId).hide();
 }
 
 function handleConfigureSaveButton()
 {
-	cbData.spreadsheetURL = document.getElementById(cbData.urlInputId).value;
+	cbData.spreadsheetURL = $(cbData.urlInputId).value;
 	cbData.commentIndex = -1;
-	document.getElementById(cbData.commentSearchInputId).value = '';
-	document.getElementById(cbData.tagSearchInputId).value = '';
+	$(cbData.commentSearchInputId).val('');
+	$(cbData.tagSearchInputId).val('');
+	$(cbData.tagSearchLabelId).html('');
 	saveCurrentSettings(function () {
 		loadTagData();
 	});
-	document.getElementById(cbData.urlContentId).classList.add(cbData.visibilityClass);
+	$(cbData.urlContentId).hide();
 }
 
 function handleRetrieveButton()
 {
-	var searchString = document.getElementById(cbData.commentSearchInputId).value;
+	var searchString = $(cbData.commentSearchInputId).val();
 	var tagList = [];
 
-	var elemTagWrapper = document.getElementById(cbData.tagSelectContentId);
+	var elemTagWrapper = $(cbData.tagSelectContentId);
 	if (isVisible(elemTagWrapper)) {
-		handleTagBlockOpenClose(document.getElementById(cbData.tagSelectButtonId));
+		handleTagBlockOpenClose($(cbData.tagSelectButtonId));
 	}
 	setTagSelectionsToMatchSearch();
 	
@@ -330,7 +324,7 @@ function handleRetrieveButton()
 
 function loadCommentList() {
 	var commentList = cbData.commentData.commentList;
-	var elemWrapper = document.getElementById(cbData.commentListId);
+	var elemWrapper = $(cbData.commentListId)[0];
 	
 	while (elemWrapper.childNodes.length > 0) {
 		elemWrapper.removeChild(elemWrapper.childNodes[0]);
@@ -354,12 +348,12 @@ function loadCommentList() {
 		handleCommentChange();
 	}
 	
-	$("#" + cbData.commentListId).attr("size", 20);
+	$(cbData.commentListId).attr("size", 20);
 }
 
 function scrollToComment()
 {
-	if (cbData.commentListId >= 0) {
+	if (cbData.commentIndex >= 0) {
 		var option = currentOption(cbData.commentListId);
 		var id = cbData.commentListOptionBaseId + option;
 		var elem = document.getElementById(id);
@@ -378,13 +372,13 @@ function handleCommentChange() {
 }
 
 function currentOption(id) {
-	return $('#'+id).find('option:selected').val();
+	return $(id).find('option:selected').val();
 }
 
 function copyTextToClipboard(text) {
 	var formattedText = formatTextFromMarkup(text);
-	var target = "#" + cbData.clipboardCopyTarget;
-	var btn = "#" + cbData.clipboardCopyBtn;
+	var target = cbData.clipboardCopyTarget;
+	var btn = cbData.clipboardCopyBtn;
 
 	$(target).show();
 
@@ -439,18 +433,12 @@ function extraMarkdownReplaceAll(originalString, pattern, opentoken, closetoken)
 }
 
 function showError(strError) {
-	var elemWrapper = document.getElementById(cbData.errorWrapper);
-	var clist = elemWrapper.classList;
-
-	elemWrapper.innerHTML = strError;
-	if (clist.contains(cbData.visibilityClass)) {
-		clist.remove(cbData.visibilityClass);
-	}
+	$(cbData.errorWrapper).html(strError);
+	$(cbData.errorWrapper).show();
 }
 
 function hideError() {
-	var clist = document.getElementById(cbData.errorWrapper).classList;
-	clist.add(cbData.visibilityClass);
+	$(cbData.errorWrapper).hide();
 }
 
 function validTag(tagval)
@@ -493,5 +481,5 @@ function toggleClassForElement(elem, className)
 
 function isVisible(elem)
 {
-	return !elem.classList.contains(cbData.visibilityClass);
+	return elem.is(':visible');
 }
