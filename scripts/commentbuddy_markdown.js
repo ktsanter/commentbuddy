@@ -16,9 +16,9 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	
 	var reader = new commonmark.Parser();
 	var writer = new commonmark.HtmlRenderer();
-	//console.log('format: original text: |' + text + '|');
+
 	text = text.replaceAll(lineBreak, "\n");
-	//console.log('pre-processed: |' + text + '|');
+
 	var parsed = reader.parse(text);
 
 	var result = writer.render(parsed);
@@ -27,10 +27,8 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	result = result.replaceAll('<code class="language-function">', codeblockspan);
 	result = result.replaceAll('</code>', codeblockendspan);
 
-	//result = emojifyString(result, forBlackBoard);
-	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, '<s>', '</s>'); 
-	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, highlightspan, hightlightendspan); 
-	//console.log('formatted comment = |' + result + '|');
+	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, 2, '<s>', '</s>'); 
+	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, hightlightendspan); 
 
 	return result;
 }
@@ -40,13 +38,15 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.split(search).join(replacement);
 };
 
-function extraMarkdownReplaceAll(originalString, pattern, opentoken, closetoken)
+function extraMarkdownReplaceAll(originalString, pattern, patternlength, opentoken, closetoken)
 {
 	var s = originalString;
-	var result;
 	
-	while ( (result = pattern.exec(s)) !== null) {
-		s = s.substring(0, result.index) + opentoken + result.toString().slice(2, -2) + closetoken + s.substring(pattern.lastIndex);
+	var result = s.match(pattern);
+	if (result !== null) {
+		for (var i = 0; i < result.length; i++) {
+			s = s.replace(result[i], opentoken + result[i].slice(patternlength, -patternlength) + closetoken);
+		}
 	}
 
 	return s;

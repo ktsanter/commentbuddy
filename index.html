@@ -6,7 +6,16 @@
   </head>
   
   <body class='cbh cbh-colorscheme'>
-    <div class='cbh-title'> Comment Buddy documentation </div>
+	<ul class='cbh-navbar'>
+		<li class='cbh-navbar-title'> CommentBuddy </li>
+		<li><a id='navAnchor000' class="cbh-nav-anchor active" href="#anchorHome">Home</a></li>
+		<li><a id='navAnchor001' class="cbh-nav-anchor" href="#anchorSetup">Setup</a></li>
+		<li><a id='navAnchor002' class="cbh-nav-anchor" href="#anchorPublishing">Publishing</a></li>
+		<li><a id='navAnchor003' class="cbh-nav-anchor" href="#anchorFormatting">Formatting</a></li>
+	</ul>
+  
+  
+    <div id='anchorHome' class='cbh-pad-for-menu'> &nbsp; </div>
 	<div>
 		Support information for the <em>CommentBuddy</em> Google extension<br>
 		<br>
@@ -14,6 +23,7 @@
 		ksanter@michiganvirtual.org
 	</div>
 	
+    <div id='anchorSetup' class='cbh-pad-for-menu'>  </div>
 	<div class='cbh-subtitle'> Setting up the Google Sheet with comments </div>
 	<div>
 		The source for comments should be a Google Sheet.  
@@ -35,17 +45,18 @@
 			to start your work.
 		</div>
 	</div>
-	
+
+	<div id='anchorPublishing' class='cbh-pad-for-menu'>  </div>
 	<div class='cbh-subtitle'> Publishing the Google Sheet </div>
 	<div>
-		The spreadsheet must be published in 'web page'(HTML) format.  The document does not have to be shared publically.<br>
+		The spreadsheet must be published in 'web page' (HTML) format.  The document does not have to be shared publically.<br>
 		<br>
 		To publish your sheet in HTML format:
-		<ul>
+		<ol>
 			<li> Choose <em>File->Publish to the web...</em> </li>
 			<li> Select "<em>Web page</em>" as the type</li>
 			<li> Press "<em>Publish</em>" </li>
-		</ul>
+		</ol>
 		<table>
 			<tr>
 				<td>
@@ -61,11 +72,11 @@
 			</tr>
 		</table>
 	</div>
-	
+
+    <div id='anchorFormatting' class='cbh-pad-for-menu'>  </div>
 	<div class='cbh-subtitle'> Adding formatting to your comments </div>
 	<div>
 		There are a number of formatting styles you can build into your comments.  Give them a try here.<br><br>
-		&#x2639;&#xFEOF;
 		<table>
 			<tr>
 				<td class='cbh-top-align'> 
@@ -202,6 +213,8 @@
 			</tr>
 		</table>
 	</div>
+	
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 	
     <script src='scripts/jquery-1.6.1.min.js'></script>
 	<script src="scripts/commonmark.min.js"></script>

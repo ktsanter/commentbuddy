@@ -1,6 +1,7 @@
 "use strict";
 
 var cbData = {
+	"helpURL": "https://ktsanter.github.io/commentbuddy/",
 	"spreadsheetURL": "",
 	"commentData": {},
 	"commentIndex": -1,
@@ -11,6 +12,7 @@ var cbData = {
 	
 	"retrieveButtonId": "#btnRetrieve",
 	"configureButtonId": "#btnConfigure",
+	"helpButtonId": "#btnHelp",
 	"configureSaveButtonId": "#btnSaveURL",
 	
 	"urlContentId": "#urlContent",
@@ -68,6 +70,7 @@ $(document).ready(function() {
 
 	$(cbData.retrieveButtonId).click(handleRetrieveButton);
 	$(cbData.configureButtonId).click(handleConfigureButton);
+	$(cbData.helpButtonId).click(handleHelpButton);
 	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
 	
 	$(cbData.commentListId).change(handleCommentChange);
@@ -382,7 +385,13 @@ function copyTextToClipboard(text) {
 	$(target).hide();
 }
 
-function showError(strError) {
+function handleHelpButton() 
+{
+	window.open(cbData.helpURL, '_blank');
+}
+
+function showError(strError) 
+{
 	$(cbData.errorWrapper).html(strError);
 	$(cbData.errorWrapper).show();
 }

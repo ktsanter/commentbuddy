@@ -32,7 +32,6 @@ var emojifierData = {
 function emojifyString(originalString, forBlackBoard)
 {
 	var s = originalString;
-	var sOutput = '';
 	
     var pattern = /:[^:]*:/g;
 	
@@ -63,10 +62,6 @@ function emojify(source, stripColons, forBlackBoard)
 			result = "&amp;" + result;
 		} else {
 			result = "&" + result;
-		}
-		if (ename=="frowning face") {
-			result = result + "&#xFEOF;";
-			console.log(result);
 		}
 	}
 

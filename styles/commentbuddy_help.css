@@ -10,6 +10,57 @@ body.cbh {
 	font-size: 13px;
 }
 
+/*---- navbar ---*/
+.cbh .cbh-navbar-title {
+	color: white;
+	background-color: var(--cb-popup-fg);
+	font-size: 14px;
+	text-decoration: none;
+	margin: 10px 8px 0px 8px;
+	padding: 4px 4px;
+	border: 1px solid white;
+	border-radius: 6px;
+}
+
+.cbh ul.cbh-navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--cb-popup-fg);
+	position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.cbh .cbh-navbar li {
+    float: left;
+}
+
+.cbh .cbh-navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+.cbh .cbh-navbar li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.cbh .cbh-navbar .active {
+    /*background-color: #4CAF50;*/
+	background-color: #2f8d98;
+	color: white;
+}
+
+/*---------------*/
+
+.cbh .cbh-pad-for-menu {
+	padding-top: 30px;
+}
+
 .cbh .cbh-title {
 	color: var(--cb-popup-bg);
 	background-color: var(--cb-popup-fg);
