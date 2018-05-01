@@ -7,6 +7,8 @@ var cbData = {
 
 	"errorWrapper": "#spanError",
 	
+	"dataStagingId": "#dataStage",
+	
 	"retrieveButtonId": "#btnRetrieve",
 	"configureButtonId": "#btnConfigure",
 	"configureSaveButtonId": "#btnSaveURL",
@@ -38,6 +40,7 @@ var cbData = {
 $(document).ready(function() {	
 	hideError();
 		
+	$(cbData.dataStagingId).hide();
 	$(cbData.urlContentId).hide();
 	$(cbData.tagSearchLabelId).hide();
 	$(cbData.tagSelectContentId).hide();
@@ -63,21 +66,13 @@ $(document).ready(function() {
 		handleInputKeyUp(this, e);
 	});
 
-	$(cbData.retrieveButtonId).click(function() {
-		handleRetrieveButton();
-	});
-	$(cbData.configureButtonId).click(function() {
-		handleConfigureButton();
-	});
-	$(cbData.configureSaveButtonId).click(function() {
-		handleConfigureSaveButton();
-	});
+	$(cbData.retrieveButtonId).click(handleRetrieveButton);
+	$(cbData.configureButtonId).click(handleConfigureButton);
+	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
 	
-	loadTagData();
-
 	$(cbData.commentListId).change(handleCommentChange);
 
-	$("#btnTest").click(test);
+	loadTagData();
 });
 
 function loadTagData() {
@@ -88,10 +83,11 @@ function loadTagData() {
 				handleConfigureButton();
 				showError("Please enter the spreadsheet URL and press 'Save'");
 				$(cbData.configureButtonId).prop("disabled",true);
+				
 			} else {
 				hideError();
-				retrieveTagList(cbData.commentData, buildTagSelectHTML);
 				$(cbData.configureButtonId).removeAttr("disabled");
+				retrieveTagAndCommentData(buildTagSelectHTML);
 			}
 		}
 	)	
@@ -198,7 +194,7 @@ function handleTagClick(elem)
 function setTagInfoToMatchSelections()
 {
 	var s = makeStringFromTagSelections();
-	console.log('s=' + s);
+
 	$(cbData.tagSearchLabelId).html(s);
 	$(cbData.tagSearchInputId).val(s);
 }
@@ -292,7 +288,7 @@ function handleConfigureSaveButton()
 	$(cbData.commentSearchInputId).val('');
 	$(cbData.tagSearchInputId).val('');
 	$(cbData.tagSearchLabelId).html('');
-	saveCurrentSettings(function () {
+	storeSettings(function () {
 		loadTagData();
 	});
 	$(cbData.urlContentId).hide();
@@ -316,11 +312,9 @@ function handleRetrieveButton()
 		}
 	}
 
-	retrieveComments(cbData.commentData, searchString, tagList, 
-		function() {
-			loadCommentList();
-			saveCurrentSettings(scrollToComment);
-		});
+	retrieveComments(searchString, tagList);
+	loadCommentList();
+	storeSettings(scrollToComment);
 }
 
 function loadCommentList() {
@@ -368,7 +362,7 @@ function handleCommentChange() {
 	var elem = document.getElementById(id);
 
 	cbData.commentIndex = parseInt(option);
-	saveCurrentSettings(null);
+	storeSettings(null);
 	copyTextToClipboard(elem.innerHTML);
 }
 
@@ -377,7 +371,7 @@ function currentOption(id) {
 }
 
 function copyTextToClipboard(text) {
-	var formattedText = formatTextFromMarkup(text);
+	var formattedText = formatTextFromMarkup(text, true);
 	var target = cbData.clipboardCopyTarget;
 	var btn = cbData.clipboardCopyBtn;
 
@@ -386,51 +380,6 @@ function copyTextToClipboard(text) {
 	$(target).html(formattedText);
 	$(btn).click();
 	$(target).hide();
-}
-
-function formatTextFromMarkup(text) {
-	var codeblockspan = "<span style=\"font-family: 'courier new', courier;\">";
-	var codeblockendspan = '</span>';
-	var highlightspan = "<span style=\"background-color: #FFFF00\">";
-	var hightlightendspan = '</span>';
-	var lineBreak = "|";
-	
-	var reader = new commonmark.Parser();
-	var writer = new commonmark.HtmlRenderer();
-	console.log('format: original text: |' + text + '|');
-	text = text.replaceAll(lineBreak, "\n");
-	console.log('pre-processed: |' + text + '|');
-	var parsed = reader.parse(text);
-
-	var result = writer.render(parsed);
-	result = emojifyString(result);
-	result = result.replaceAll('<code>', codeblockspan);
-	result = result.replaceAll('<code class="language-function">', codeblockspan);
-	result = result.replaceAll('</code>', codeblockendspan);
-
-	result = emojifyString(result);
-	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, '<s>', '</s>'); 
-	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, highlightspan, hightlightendspan); 
-	console.log('formatted comment = |' + result + '|');
-
-	return result;
-}
-
-String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.split(search).join(replacement);
-};
-
-function extraMarkdownReplaceAll(originalString, pattern, opentoken, closetoken)
-{
-	var s = originalString;
-	var result;
-	
-	while ( (result = pattern.exec(s)) !== null) {
-		s = s.substring(0, result.index) + opentoken + result.toString().slice(2, -2) + closetoken + s.substring(pattern.lastIndex);
-	}
-
-	return s;
 }
 
 function showError(strError) {
@@ -483,55 +432,4 @@ function toggleClassForElement(elem, className)
 function isVisible(elem)
 {
 	return elem.is(':visible');
-}
-
-function test()
-{
-	var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/pub?output=html';
-	testData1(url);
-	
-	var url2 = 'https://spreadsheets.google.com/feeds/cells/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/1/public/values?alt=json-in-script';
-	//testData2(url);
-}
-
-function testData1(url)
-{
-	//var elem = document.createElement('div');
-	//elem.id = 'testDiv';
-	var elem = "#testDiv";
-	
-	//$(elem).hide();
-	
-	var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/pub?output=html';
-		console.log('here we go...');
-    $(elem).load(url, function(responseTxt, statusTxt, xhr){
-		console.log('in callback...');
-        if(statusTxt == "success") {
-            console.log("External content loaded successfully!");
-			console.log($(elem).html());
-		} else if(statusTxt == "error") {
-            console.log("Error: " + xhr.status + ": " + xhr.statusText);
-		} else {
-			console.log(xhr.status + ": " + xhr.statusText);
-		}
-    });
-}
-
-function testData2(url)
-{
-	var xhttp = new XMLHttpRequest();
-	
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4) {
-			if (this.status == 200) {
-				console.log('yay');
-				console.log(xhttp.response);
-			} else {
-				console.log('boo');
-			}
-		}
-	};
-	
-	xhttp.open("GET", url, true);
-	xhttp.send();
 }

@@ -2,6 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="styles/commentbuddy_help.css" type="text/css" />
+	<meta charset="utf-8"/>
   </head>
   
   <body class='cbh cbh-colorscheme'>
@@ -37,12 +38,12 @@
 	
 	<div class='cbh-subtitle'> Publishing the Google Sheet </div>
 	<div>
-		The spreadsheet must be published in tab-separated (TSV) format.  The document does not have to be shared publically.<br>
+		The spreadsheet must be published in 'web page'(HTML) format.  The document does not have to be shared publically.<br>
 		<br>
-		To publish your sheet in TSV format:
+		To publish your sheet in HTML format:
 		<ul>
 			<li> Choose <em>File->Publish to the web...</em> </li>
-			<li> Select "<em>Tab-separated values (.tsv)</em>"</li>
+			<li> Select "<em>Web page</em>" as the type</li>
 			<li> Press "<em>Publish</em>" </li>
 		</ul>
 		<table>
@@ -54,7 +55,7 @@
 				</td>
 				<td>
 					<div class='cbh-image-container'>
-						<img class='cbh-image' src="https://drive.google.com/uc?id=1VQ4lEq-xqO05-6igx2RTYE_xr4c4b1SJ">
+						<img class='cbh-image' src="https://drive.google.com/uc?id=1xD1Ft9R-ftNPxDIuepdX4v1s6EFw6znF">
 					</div>
 				</td>
 			</tr>
@@ -63,12 +64,149 @@
 	
 	<div class='cbh-subtitle'> Adding formatting to your comments </div>
 	<div>
-		reference sheet with examples for formatting<br>
-		sample TSV URL<br>
-		tip for line breaks<br>
+		There are a number of formatting styles you can build into your comments.  Give them a try here.<br><br>
+		&#x2639;&#xFEOF;
+		<table>
+			<tr>
+				<td class='cbh-top-align'> 
+					<table class='cbh-ref-table'>
+						<tr>
+							<th class='cbh-ref-table'> Test formatting </th>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td><textarea id='testInput' rows="20" cols="50" maxlength="1000"> </textarea></td>
+						</tr>
+
+						<tr>
+							<th class='cbh-ref-table'> Formatted results </th>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td id='testOutput'></td>
+						</tr>
+					</table>
+				</td>
+				
+				<td class='cbh-top-align'> 
+					<table class='cbh-ref-table'>
+						<tr>
+							<th class='cbh-ref-table'> type this... </th>
+							<th class='cbh-ref-table'> to get this... </th>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> *italics* </td>
+							<td class='cbh-ref-table'> <em> italics </em> </td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> **bold** </td>
+							<td class='cbh-ref-table'> <strong> bold </strong> </td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> %%highlight%% </td>
+							<td class='cbh-ref-table'> <span class='cbh-highlight'> highlight  </span></td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> ~~strikethrough~~ </td>
+							<td class='cbh-ref-table'> <span class='cbh-strike'> bold </span> </td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> 
+								- first item <br>
+								- second item
+							</td>
+							<td class='cbh-ref-table'> 
+								<ul>
+									<li> first item </li>
+									<li> second item </li>
+								</ul>
+							</td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> 
+								1. first item <br>
+								2. second item
+							</td>
+							<td class='cbh-ref-table'> 
+								<ol>
+									<li> first item </li>
+									<li> second item </li>
+								</ol>
+							</td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> an [inline link] (https://www.google.com "go to google.com") </td>
+							<td class='cbh-ref-table'> an <a href="https://www.google.com" title="go to google.com"> inline link </a> </td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> ![alt text] (https://goo.gl/hGjWgi) "I'm a smiley face") </td>
+							<td class='cbh-ref-table'> <img class='cbh-ref-table-image' src="https://goo.gl/hGjWgi"</td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> some `inline` code</td>
+							<td class='cbh-ref-table'> some <code>inline </code> code </td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> 
+								a code block: <br>
+								```<br>
+									function(foo) {<br>
+										console.log('hello world');<br>
+									}<br>
+								```
+							</td>
+							<td class='cbh-ref-table'> 
+								a code block: <br>
+								<div class='cbh-code-block'> 
+									function(foo) {<br>
+									&nbsp;&nbsp;&nbsp;&nbsp; console.log('hello world');<br>
+									}
+								</div>
+							</td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> 
+								A horizontal rule</br>
+								___</br>
+								between these lines
+							</td>
+							<td class='cbh-ref-table'> 
+								A horizontal rule</br>
+								<hr>
+								between these lines
+							</td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> 	emojis :camel: :grinning face:	</td>
+							<td class='cbh-ref-table'> 	emojis &#x1F42A; &#x1F600; </td>
+						</tr>
+
+						<tr class='cbh-ref-table'>
+							<td class='cbh-ref-table'> 	special characters:  <br>Bon jour, mon fr&amp;eacute;re. &amp;iexcl;Hola Se&amp;ntilde;or!</td>
+							<td class='cbh-ref-table'> 	special characters:  <br>Bon jour, mon fr&eacute;re. &iexcl;Hola Se&ntilde;or!</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 	</div>
 	
     <script src='scripts/jquery-1.6.1.min.js'></script>
+	<script src="scripts/commonmark.min.js"></script>
     <script src="scripts/commentbuddy_help.js"></script>
+	<script src="scripts/commentbuddy_markdown.js"></script>
+	<script src="scripts/emojifier.js"></script>
   </body>
 </html>
