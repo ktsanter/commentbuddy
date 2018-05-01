@@ -163,3 +163,49 @@ function searchStringMatches(searchString, comment)
 	
 	return match;
 }
+
+function test()
+{
+	var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/pub?output=html';
+	testData1(url);
+}
+
+function testData1(url)
+{
+	var elem = "#testDiv";
+	
+	$(elem).hide();
+	
+	var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/pub?output=html';
+		console.log('here we go...');
+    $(elem).load(url, function(responseTxt, statusTxt, xhr){
+		console.log('in callback...');
+        if(statusTxt == "success") {
+            console.log("External content loaded successfully!");
+			parseCommentHTML($(elem).html());
+		} else if(statusTxt == "error") {
+            console.log("Error: " + xhr.status + ": " + xhr.statusText);
+		} else {
+			console.log(xhr.status + ": " + xhr.statusText);
+		}
+    });
+}
+
+function parseCommentHTML(data)
+{
+	//console.log(data);
+	var sheet = 0;
+	
+	var nRows = $("[id^=" + sheet + "R]").length;
+	console.log("nRows = " + nRows);
+	
+	for (var row = 0; row < nRows; row++) {
+		var rowdata = document.getElementById(sheet + "R" + row);
+		var child = rowdata.parentNode.childNodes;
+		var tags = child[1].innerHTML;
+		var comment = child[2].innerHTML;
+		console.log("row #" + row + " tags='" + tags + "' comment='" + comment + "'");
+	}
+	
+	console.log("that's it");
+}

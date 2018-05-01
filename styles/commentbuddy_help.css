@@ -19,6 +19,7 @@ body.cbh {
 	border-radius: 5px;
 	font-size: 18px;
 	font-weight: bold;
+	width: 40%;
 	margin-bottom: 8px;
 }
 
@@ -31,6 +32,7 @@ body.cbh {
 	border-radius: 5px;
 	font-size: 15px;
 	font-weight: bold;
+	width: 40%;
 	margin-top: 24px;
 	margin-bottom: 8px;
 }

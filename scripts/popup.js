@@ -76,7 +76,8 @@ $(document).ready(function() {
 	loadTagData();
 
 	$(cbData.commentListId).change(handleCommentChange);
-		
+
+	$("#btnTest").click(test);
 });
 
 function loadTagData() {
@@ -482,4 +483,55 @@ function toggleClassForElement(elem, className)
 function isVisible(elem)
 {
 	return elem.is(':visible');
+}
+
+function test()
+{
+	var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/pub?output=html';
+	testData1(url);
+	
+	var url2 = 'https://spreadsheets.google.com/feeds/cells/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/1/public/values?alt=json-in-script';
+	//testData2(url);
+}
+
+function testData1(url)
+{
+	//var elem = document.createElement('div');
+	//elem.id = 'testDiv';
+	var elem = "#testDiv";
+	
+	//$(elem).hide();
+	
+	var url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSP2U-7ExmhrnQ1ynOYIgsfFm-jfQLfJ_NQ7iYKtS4nmwwl6-kJgsvBtaoonaO9stEIx_E6UnQBAiBv/pub?output=html';
+		console.log('here we go...');
+    $(elem).load(url, function(responseTxt, statusTxt, xhr){
+		console.log('in callback...');
+        if(statusTxt == "success") {
+            console.log("External content loaded successfully!");
+			console.log($(elem).html());
+		} else if(statusTxt == "error") {
+            console.log("Error: " + xhr.status + ": " + xhr.statusText);
+		} else {
+			console.log(xhr.status + ": " + xhr.statusText);
+		}
+    });
+}
+
+function testData2(url)
+{
+	var xhttp = new XMLHttpRequest();
+	
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				console.log('yay');
+				console.log(xhttp.response);
+			} else {
+				console.log('boo');
+			}
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();
 }
