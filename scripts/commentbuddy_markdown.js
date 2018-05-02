@@ -27,8 +27,9 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	result = result.replaceAll('<code class="language-function">', codeblockspan);
 	result = result.replaceAll('</code>', codeblockendspan);
 
-	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, 2, '<s>', '</s>'); 
+	result = extraMarkdownReplaceAll(result, /\^\^\^[^^]*\^\^\^/g, 3, '<sub>', '</sub>'); 
 	result = extraMarkdownReplaceAll(result, /\^\^[^^]*\^\^/g, 2, '<sup>', '</sup>'); 
+	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, 2, '<s>', '</s>'); 
 	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, hightlightendspan); 
 
 	return result;
