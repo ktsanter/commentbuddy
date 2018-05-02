@@ -51,13 +51,13 @@ function emojify(source, stripColons, forBlackBoard)
 	
 	if (stripColons) {
 		ename = ename.slice(1, -1);
-
 	}
 	
 	var result = emojifierData[ename];
 	if (result == undefined) {
-		result = source;
-	} else {
+		result = ":";
+
+		} else {
 		if (forBlackBoard) {
 			result = "&amp;" + result;
 		} else {
