@@ -2,10 +2,11 @@
   "manifest_version": 2,
 
   "name": "CommentBuddy",
+  "short_name": "CB",
   "description": "Copy stored comments to clipboard",
-  "version": "0.2",
+  "version": "0.0.1",
   "browser_action": {
-    "default_icon": "cb.png",
+    "default_icon": "cb_16_rounded.png",
     "default_popup": "popup.html",
     "default_title": "Copy stored comments to clipboard"
   },
@@ -14,7 +15,8 @@
     "clipboardWrite" 
   ],
   "icons": {
-     "16": "cb_small_rounded.png"
+     "16": "cb_16_rounded.png",
+	 "128": "cb_128_rounded.png"
    },
    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
