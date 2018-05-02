@@ -96,13 +96,7 @@ function parseTagAndCommentData(data)
 		}
 		
 		var comment = child[2].innerHTML;
-		if (comment.search('foo') >= 0) {
-			console.log('orig comment=|' + comment);
-		}
 		comment = comment.replaceAll('<br>', String.fromCharCode(10) + String.fromCharCode(10));
-		if (comment.search('foo') >= 0) {
-			console.log('post comment=|' + comment);
-		}
 		commentList.push({"tags": tagsForThisComment, "comment": comment});
 	}
 	

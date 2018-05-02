@@ -1,1 +1,3 @@
 emoji font
+
+copy to clipboard not happening on load when only one comment
