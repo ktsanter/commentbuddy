@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/popup.css" type="text/css" />
+  </head>
+  
+  <body class='cb-colorscheme'>
+
+    <div class='cb-title'> Comment Buddy <span id='spanVersion' class='cb-version'> </span></div>
+    
+	<span id='spanError' class='cb-error'></span>
+
+    <table>
+      <tr class='cb-row'>
+        <td>  </td>
+        <td class='cb-data cb-control-align'>
+          <button id='btnRetrieve' class='cb-btn cb-control-btn' title='retrieve comments matching the search string with the selected tags'> retrieve </button> 
+          <button id='btnConfigure' class='cb-btn cb-control-btn' title='specify the Google Sheet to work with'> configure </button> 
+          <button id='btnHelp' class='cb-btn cb-control-btn' title='get help with using CommentBuddy'> help </button> 
+		</td>
+		<td>
+		</td>
+      </tr>
+
+      <tr id='urlContent' class='cb-row'>
+        <td class='cb-label'> 
+			<div class='tooltip'> 
+				URL
+				<span class='cb-info-icon tooltiptext'>  
+					Enter the published URL of a Google Sheets document.
+					<ul>
+						<li> The first column should contain comma-separated tag values </li>
+						<li> The second column should contain the comment corresponding to the tags </li>
+						<li> The spreadsheet must be published in 'Web-page' format </li>
+					</ul>
+					You can find an example by right-clicking 
+					<a class='cb-tip-link' href='https://drive.google.com/open?id=1Rpkdp3Zxu_RdweCGbsDvJD7qGl5KFTjlFDrnMQDV1Og'>here</a> 
+					and opening the link 
+				</span>
+			</div>
+		</td>
+        <td class='cb-data'>
+          <input id='inputCommentURL' type='text' class='cb-configure' maxlength=200> 
+		  <button id='btnSaveURL' class='cb-btn' title='save the worksheet URL'> save </button>
+		</td>
+      </tr>
+            
+      <tr class='cb-row'>
+        <td class='cb-label'> 
+			<div class='tooltip'> 
+				Search 
+				<span class='cb-info-icon tooltiptext'>  
+					Enter a string to search for in the comments here. <br>
+					Only comments containing exact matches of the text will be retrieved
+				</span>
+			</div>
+		</td>
+        <td class='cb-data'>
+          <input id='inputCommentSearch' type='text' class='cb-comment-search' maxlength=80> 
+		</td>
+		<td>
+		</td>
+      </tr>
+            
+      <tr class='cb-row'>
+        <td class='cb-label cb-tag-align'> 
+			<div class='tooltip'> 
+				Tags 
+				<span class='cb-info-icon tooltiptext'>  
+					Enter tags separated by spaces <br>
+					Only comments with all of the tags will be retrieved
+				</span>
+			</div>
+		</td>
+        <td class='cb-data'> 
+			<input id='inputTagSearch' type='text' class='cb-tag-search' maxlength=80> 
+			<label id='labelTagSearch' class='cb-tagsearch-label' for='inputCommentSearch'> xxx </label>
+			<div id='tagSelectContent' class='cb-tag-selection-area'> </div>
+		</td>
+		<td class='cb-tag-align'>
+			<button id='btnTagOpenClose' class='cb-btn' title='show/hide checkboxes for tags'>  </button>
+		</td>
+      </tr>
+
+	  <tr>
+		<td colspan=2>
+			<hr/>
+		</td>
+	  <tr>
+	  
+      <tr>
+        <td class='cb-label'> Comments </td>
+        <td class='cb-data'>
+          <select id='selComment' class='cb-comment-select'> </select>
+        </td>
+      </tr>
+    </table>
+	
+	<div id="copyTarget" class='cb-formatted-comment'> </div>
+	<button id='btnCopy' class="cb-btn" data-clipboard-target="#copyTarget"></button>
+	
+	<div id='dataStage'> </div>
+	
+    <script src='scripts/jquery-1.6.1.min.js'></script>
+	<script src="scripts/commonmark.min.js"></script>
+	<script src="scripts/clipboard.min.js"></script>
+    <script src="scripts/popup.js"></script>
+    <script src="scripts/retrieve.js"></script>
+	<script src="scripts/emojifier.js"></script>
+	<script src="scripts/commentbuddy_markdown.js"></script>
+  </body>
+</html>

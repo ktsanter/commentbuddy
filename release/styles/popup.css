@@ -1,0 +1,165 @@
+.cb-colorscheme {
+	--cb-popup-fg: #185A6A;
+	--cb-popup-bg: #EAEAEA;
+}
+
+body {
+	overflow-x: auto;
+	width: 600px;
+	height: 500px;
+	margin:0;
+	padding:0;
+	color: var(--cb-popup-fg);
+	background-color: var(--cb-popup-bg);
+}
+
+.cb-title {
+	color: var(--cb-popup-bg);
+	background-color: var(--cb-popup-fg);
+	border-style: solid;
+	border-color: var(--cb-popup-bg);
+	border-width: 1px;
+	border-radius: 5px;
+	font-size: 15px;
+	padding-left: 4px;
+}
+
+.cb-version {
+	font-size: 12px;
+	float:right;
+	padding-right: 4px;
+	padding-top: 2px;
+}
+
+.cb-error {
+	font-size: 15px;
+	color: red;
+	font-weight: bold;
+	padding-left: 4px;
+}
+
+.cb-label {
+	width: 10%;
+	font-family: arial;
+	font-size: 13px;
+	padding-top: 3px;
+}
+
+.cb-data {
+	width: 85%;
+}
+
+.cb-row {
+	height: 8%;
+}
+
+.cb-btn {
+	color: var(--cb-popup-bg);
+	background-color: var(--cb-popup-fg);
+	border: 1px solid var(--cb-popup-fg);
+	border-radius: 8px;
+}
+
+.cb-btn:disabled {
+	color: var(--cb-popup-fg);
+	background-color: var(--cb-popup-bg);
+}
+
+.cb-control-align {
+	text-align: left;
+}
+
+.cb-tag-align {
+	vertical-align: top;
+}
+
+.cb-configure{
+	width: 85%;
+}
+
+.cb-comment-search{
+	width: 100%;
+}
+
+.cb-tag-search {
+	width: 100%;
+}
+
+.cb-tagsearch-label {
+	width: 100%;
+	height: 20px;
+	color: black;
+	display: inline-block;
+	background-color: var(--cb-popup-bg);
+	border: 1px solid var(--cb-popup-fg);
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+.cb-tag-selection-area {
+	border: 1px solid var(--cb-popup-fg);
+	overflow-x:scroll; 
+	width: 500px;
+}
+
+.cb-comment-select {
+  overflow-x: scroll;
+  overflow-y: auto;
+  font-family: arial;
+  font-size: 13px;
+  width: 100%;
+}
+
+.cb-align-right {
+	float: right;
+	width: 100%;
+	color: var(--cb-popup-bg);
+	background-color: var(--cb-popup-fg);
+	border-radius: 8px;
+}
+
+.cb-formatted-comment {
+	font: 12px arial, sans-serif;
+	color:black;
+	background-color:white;
+}
+
+.cb-info-icon {
+	color: blue; /*var(--cb-popup-bg);*/
+	background-color: red; /*var (--cb-popup-fg);*/.
+	font-size: 16px;
+	border: none;
+	border-radius: 8px;
+}
+
+.cb-tip-link {
+	color: white;
+}
+
+/*----- tooltip CSS from w3schools: https://www.w3schools.com/css/css_tooltip.asp */
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted var(--cb-popup-fg); /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 500px;
+    background-color: var(--cb-popup-fg);;
+    color: #fff;
+    text-align: left;
+    padding: 5px 0;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
