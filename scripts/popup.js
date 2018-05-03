@@ -9,6 +9,7 @@ var cbData = {
 	"errorWrapper": "#spanError",
 	
 	"dataStagingId": "#dataStage",
+	"versionId": "#spanVersion",
 	
 	"retrieveButtonId": "#btnRetrieve",
 	"configureButtonId": "#btnConfigure",
@@ -74,6 +75,8 @@ $(document).ready(function() {
 	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
 	
 	$(cbData.commentListId).change(handleCommentChange);
+
+	$(cbData.versionId).html("v" + chrome.runtime.getManifest().version);
 
 	loadTagData();
 });
