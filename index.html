@@ -86,7 +86,7 @@
 						</tr>
 
 						<tr class='cbh-ref-table'>
-							<td><textarea id='testInput' rows="20" cols="50" maxlength="1000"> </textarea></td>
+							<td><textarea id='testInput' rows="20" cols="50" maxlength="5000"> </textarea></td>
 						</tr>
 
 						<tr>
@@ -218,8 +218,15 @@
 						</tr>
 
 						<tr class='cbh-ref-table'>
-							<th class = 'cbh-ref-table'> emojis </th>
-							<td class='cbh-ref-table'> 	 :camel: :grinning face:	</td>
+							<th class = 'cbh-ref-table'> 
+								emojis 
+								<button id='btnFullEmojiList' class='cbh-button' title='show full list of supported emojis'	> full list </button>
+							</th>
+							<td class='cbh-ref-table'> 	 
+								:camel: :grinning face:	
+								<div id='emojiReferenceWrapper'> </div>
+							</td>
+							
 							<td class='cbh-ref-table'> 	 &#x1F42A; &#x1F600; </td>
 						</tr>
 

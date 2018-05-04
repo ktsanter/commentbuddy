@@ -152,3 +152,16 @@ body.cbh {
 .cbh .cbh-ref-table-image {
 	width: 60px;
 }
+
+.cbh .cbh-button {
+	color: var(--cb-popup-fg);
+	background-color: var(--cb-popup-bg);	
+	border: 1px solid var(--cb-popup-bg);
+	border-radius: 4px;
+	font-size: 11px;
+	height: 14px;
+}
+
+.cbh .cbh-button.depressed {
+	background-color: #C0C0C0;
+}
