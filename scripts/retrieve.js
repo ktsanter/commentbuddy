@@ -2,14 +2,18 @@
 
 function retrieveSettings(callback)
 {
-	chrome.storage.sync.get(['cbURL', 'cbSearch', 'cbTags', 'cbCommentIndex'], function(result) {
+	chrome.storage.sync.get(['cbURL', 'cbBBSelector', 'cbSearch', 'cbTags', 'cbCommentIndex'], function(result) {
 		var urlString = '';
+		var bbSelector = true;
 		var searchString = '';
 		var tagString = '';
 		var commentIndex = -1;
 
 		if (typeof result.cbURL != 'undefined') {
 			urlString = result.cbURL;
+		}
+		if (typeof result.cbBBSelector != 'undefined') {
+			bbSelector = result.cbBBSelector;
 		}
 		if (typeof result.cbSearch != 'undefined') {
 			searchString = result.cbSearch;
@@ -22,6 +26,7 @@ function retrieveSettings(callback)
 		}
 		
 		cbData.spreadsheetURL = urlString;
+		document.getElementById(cbData.bbSelectorId.substring(1)).checked = bbSelector;
 		cbData.commentIndex = commentIndex;
 		$(cbData.urlInputId).val(urlString);
 		$(cbData.commentSearchInputId).val(searchString);
@@ -32,9 +37,10 @@ function retrieveSettings(callback)
 }
 
 function storeSettings(callback)
-{
+{	
 	var keys = {
 		"cbURL": $(cbData.urlInputId).val(),
+		"cbBBSelector": document.getElementById(cbData.bbSelectorId.substring(1)).checked,
 		"cbSearch": $(cbData.commentSearchInputId).val(), 
 		"cbTags": $(cbData.tagSearchInputId).val(),
 		"cbCommentIndex": cbData.commentIndex

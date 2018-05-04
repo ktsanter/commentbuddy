@@ -37,9 +37,7 @@ function emojifyString(originalString, forBlackBoard)
 	
 	var result = s.match(pattern);
 	if (result !== null) {
-		console.log("emojifier count of matches=" + result.length);
 		for (var i = 0; i < result.length; i++) {
-			console.log("emojifier match #" + i + "=|" + result[i] + "|");
 			s = s.replace(result[i], emojify(result[i], true, forBlackBoard));
 		}
 	}

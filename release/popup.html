@@ -14,9 +14,17 @@
       <tr class='cb-row'>
         <td>  </td>
         <td class='cb-data cb-control-align'>
-          <button id='btnRetrieve' class='cb-btn cb-control-btn' title='retrieve comments matching the search string with the selected tags'> retrieve </button> 
-          <button id='btnConfigure' class='cb-btn cb-control-btn' title='specify the Google Sheet to work with'> configure </button> 
-          <button id='btnHelp' class='cb-btn cb-control-btn' title='get help with using CommentBuddy'> help </button> 
+			<button id='btnRetrieve' class='cb-btn cb-control-btn' title='retrieve comments matching the search string with the selected tags'> retrieve </button> 
+			<button id='btnConfigure' class='cb-btn cb-control-btn' title='specify the Google Sheet to work with'> configure </button> 
+			<button id='btnHelp' class='cb-btn cb-control-btn' title='get help with using CommentBuddy'> help </button> 
+			<span class="cb-slider-container" title="choose how special characters are handled" >
+				<span> normal </span>
+				<label class="switch">
+					<input id='bbSelector' type="checkbox" checked>
+					<span class="slider round"> </span>
+				</label>
+				<span> BB </span>
+			</span>
 		</td>
 		<td>
 		</td>
@@ -89,7 +97,7 @@
 	  <tr>
 	  
       <tr>
-        <td class='cb-label'> Comments </td>
+        <td class='cb-label' title="click on a comment to copy it to the clipboard"> Comments </td>
         <td class='cb-data'>
           <select id='selComment' class='cb-comment-select'> </select>
         </td>

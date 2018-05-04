@@ -15,6 +15,7 @@ var cbData = {
 	"configureButtonId": "#btnConfigure",
 	"helpButtonId": "#btnHelp",
 	"configureSaveButtonId": "#btnSaveURL",
+	"bbSelectorId": "#bbSelector",
 	
 	"urlContentId": "#urlContent",
 	"urlInputId": "#inputCommentURL",
@@ -73,6 +74,7 @@ $(document).ready(function() {
 	$(cbData.configureButtonId).click(handleConfigureButton);
 	$(cbData.helpButtonId).click(handleHelpButton);
 	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
+	$(cbData.bbSelectorId).change(handleBBSelector);
 	
 	$(cbData.commentListId).change(handleCommentChange);
 
@@ -300,6 +302,16 @@ function handleConfigureSaveButton()
 	$(cbData.urlContentId).hide();
 }
 
+function handleBBSelector()
+{
+	handleCommentChange();
+}
+
+function isBBModeSelected()
+{
+	return document.getElementById(cbData.bbSelectorId.substring(1)).checked;
+}
+
 function handleRetrieveButton()
 {
 	var searchString = $(cbData.commentSearchInputId).val();
@@ -377,7 +389,7 @@ function currentOption(id) {
 }
 
 function copyTextToClipboard(text) {
-	var formattedText = formatTextFromMarkup(text, true);
+	var formattedText = formatTextFromMarkup(text, isBBModeSelected());
 	var target = cbData.clipboardCopyTarget;
 	var btn = cbData.clipboardCopyBtn;
 

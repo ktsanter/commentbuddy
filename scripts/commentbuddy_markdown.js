@@ -11,21 +11,18 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	codeblockspan += "\">";
 	var codeblockendspan = '</span>';
 	var highlightspan = "<span style=\"background-color: #FFFF00\">";
-	var hightlightendspan = '</span>';
+	var highlightendspan = '</span>';
 	var lineBreak = "|";
 	
 	var reader = new commonmark.Parser();
 	var writer = new commonmark.HtmlRenderer();
 
-	console.log("original text: |" + text + "|");
 	text = text.replaceAll(lineBreak, "\n");
 
 	var parsed = reader.parse(text);
 
 	var result = writer.render(parsed);
-	console.log("rendered: |" + result + "|");
 	result = emojifyString(result, forBlackBoard);
-	console.log("emojified: |" + result + "|");
 	result = result.replaceAll('<code>', codeblockspan);
 	result = result.replaceAll('<code class="language-function">', codeblockspan);
 	result = result.replaceAll('</code>', codeblockendspan);
@@ -33,8 +30,7 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	result = extraMarkdownReplaceAll(result, /\^\^\^[^^]*\^\^\^/g, 3, '<sub>', '</sub>'); 
 	result = extraMarkdownReplaceAll(result, /\^\^[^^]*\^\^/g, 2, '<sup>', '</sup>'); 
 	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, 2, '<s>', '</s>'); 
-	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, hightlightendspan); 
-	console.log("final result=|" + result + "|");
+	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, highlightendspan); 
 
 	return result;
 }

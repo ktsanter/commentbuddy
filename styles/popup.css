@@ -163,3 +163,66 @@ body {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+/*----- end of tooltip -----*/
+
+
+/*----- slider button CSS based on w3schools: https://www.w3schools.com/howto/howto_css_switch.asp */
+.cb-slider-container {
+	float: right;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 13px;
+  top: 2px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--cb-popup-fg);
+  border: 1px solid var(--cb-popup-bg);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 9px;
+  width: 9px;
+  left: 1px;
+  bottom: 1px;
+  background-color: var(--cb-popup-bg);
+  -webkit-transition: .1s;
+  transition: .1s;
+}
+
+input:checked + .slider {
+  background-color: var(--cb-popup-fg);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(11px);
+  -ms-transform: translateX(11px);
+  transform: translateX(11px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 17px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/*----- end of slider button ----*/
