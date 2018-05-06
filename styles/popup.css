@@ -46,7 +46,11 @@ body {
 }
 
 .cb-preview {
+	font-size: 13px;
 	border: 1px solid var(--cb-popup-fg);
+	max-height: 130px;
+	overflow-x: auto;
+	overflow-y: auto;
 }
 
 .cb-data {

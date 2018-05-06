@@ -22,9 +22,6 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	var parsed = reader.parse(text);
 
 	var result = writer.render(parsed);
-	if (!forBlackBoard) {
-		result = result.replaceAll("&amp;", "&");
-	}
 	result = emojifyString(result, forBlackBoard);
 	result = result.replaceAll('<code>', codeblockspan);
 	result = result.replaceAll('<code class="language-function">', codeblockspan);

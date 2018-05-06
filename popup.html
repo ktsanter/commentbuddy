@@ -17,7 +17,7 @@
 			<button id='btnRetrieve' class='cb-btn cb-control-btn' title='retrieve comments matching the search string with the selected tags'> retrieve </button> 
 			<button id='btnConfigure' class='cb-btn cb-control-btn' title='specify the Google Sheet to work with'> configure </button> 
 			<button id='btnHelp' class='cb-btn cb-control-btn' title='get help with using CommentBuddy'> help </button> 
-			<span class="cb-slider-container" title="choose how special characters are handled" >
+			<span class="cb-slider-container" title="choose how special characters are handled" style="display:none">
 				<span> normal </span>
 				<label class="switch">
 					<input id='bbSelector' type="checkbox" checked>
@@ -105,8 +105,10 @@
 
       <tr>
         <td class='cb-label'> Preview </td>
-        <td class='cb-preview' id='commentPreview' class='cb-data'>
-		   ** preview of formatted comment **
+        <td class='cb-data'>
+			<div id='commentPreview' class='cb-preview'>
+				** <em>preview of formatted comment</em> **
+			</div>
         </td>
       </tr>
     </table>

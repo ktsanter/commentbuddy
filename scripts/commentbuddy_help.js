@@ -45,7 +45,7 @@ function loadEmojiReferenceList()
 		var emoji = emojiList[i];
 		var opt = document.createElement('option');
 		opt.value = emoji.key;
-		opt.innerHTML = emoji.key + " " + emoji.code;
+		opt.innerHTML = emoji.key + " " + formatTextFromMarkup("::" + emoji.key + "::", false);
 		list.appendChild(opt);
 	}
 	wrapper.appendChild(list);
