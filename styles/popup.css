@@ -6,7 +6,7 @@
 body {
 	overflow-x: auto;
 	width: 600px;
-	height: 500px;
+	height: 600px;
 	margin:0;
 	padding:0;
 	color: var(--cb-popup-fg);
@@ -43,6 +43,10 @@ body {
 	font-family: arial;
 	font-size: 13px;
 	padding-top: 3px;
+}
+
+.cb-preview {
+	border: 1px solid var(--cb-popup-fg);
 }
 
 .cb-data {

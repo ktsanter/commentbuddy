@@ -68,6 +68,6 @@ function handleFullEmojiListButton()
 
 function handleEmojiListSelection(elem)
 {
-	$(cbhData.inputSelector).val( $(cbhData.inputSelector).val() + ":" + elem.value + ":");
+	$(cbhData.inputSelector).val( $(cbhData.inputSelector).val() + "::" + elem.value + "::");
 	handleTestInputChange();
 }

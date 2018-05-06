@@ -74,7 +74,7 @@ function emojifyString(originalString, forBlackBoard)
 {
 	var s = originalString;
 	
-    var pattern = /:[^:]*:/g;
+    var pattern = /::[0-9a-zA-Z ]*::/g;
 	
 	var result = s.match(pattern);
 	if (result !== null) {
@@ -91,7 +91,7 @@ function emojify(source, stripColons, forBlackBoard)
 	var ename = source;
 	
 	if (stripColons) {
-		ename = ename.slice(1, -1);
+		ename = ename.replaceAll(":", "");
 	}
 	
 	var result = emojifierData[ename];

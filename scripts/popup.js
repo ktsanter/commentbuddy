@@ -29,6 +29,7 @@ var cbData = {
 	"tagSelectId": "cbTagSelect",
 	"tagSelectClass": "cb-tag-select",
 	
+	"commentPreviewSelector": "#commentPreview",
 	"commentListId" : "#selComment",
 	"commentListOptionBaseId" : "optComment", // note no jQuery selector symbol
 	
@@ -381,23 +382,26 @@ function handleCommentChange() {
 
 	cbData.commentIndex = parseInt(option);
 	storeSettings(null);
-	copyTextToClipboard(elem.innerHTML);
+	copyTextToClipboardAndPreview(elem.innerHTML);
 }
 
 function currentOption(id) {
 	return $(id).find('option:selected').val();
 }
 
-function copyTextToClipboard(text) {
+function copyTextToClipboardAndPreview(text) {
 	var formattedText = formatTextFromMarkup(text, isBBModeSelected());
 	var target = cbData.clipboardCopyTarget;
 	var btn = cbData.clipboardCopyBtn;
+	var preview = cbData.commentPreviewSelector;
 
 	$(target).show();
 
 	$(target).html(formattedText);
 	$(btn).click();
 	$(target).hide();
+
+	$(preview).html(formattedText);
 }
 
 function handleHelpButton() 
