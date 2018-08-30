@@ -77,7 +77,8 @@ $(document).ready(function() {
 	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
 	$(cbData.bbSelectorId).change(handleBBSelector);
 	
-	$(cbData.commentListId).change(handleCommentChange);
+	//$(cbData.commentListId).change(handleCommentChange);
+	$(cbData.commentListId).change(_changeCommentList);
 
 	$(cbData.versionId).html("v" + chrome.runtime.getManifest().version);
 
@@ -90,7 +91,7 @@ function loadTagData() {
 		function() {
 			if (cbData.spreadsheetURL == null || cbData.spreadsheetURL == '') {
 				handleConfigureButton();
-				showError("Please enter the spreadsheet URL and press 'Save'");
+				showError("Please enter the link for your published spreadsheet and press 'Save'");
 				$(cbData.configureButtonId).prop("disabled",true);
 				
 			} else {
@@ -373,6 +374,11 @@ function scrollToComment()
 		var elem = document.getElementById(id);
 		elem.scrollIntoView();
 	}
+}
+
+function _changeCommentList() {
+	handleCommentChange();
+	window.close();
 }
 
 function handleCommentChange() {
