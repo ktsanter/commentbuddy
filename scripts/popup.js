@@ -77,8 +77,11 @@ $(document).ready(function() {
 	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
 	$(cbData.bbSelectorId).change(handleBBSelector);
 	
-	//$(cbData.commentListId).change(handleCommentChange);
 	$(cbData.commentListId).change(_changeCommentList);
+	$(cbData.commentListId).click( function () {
+		handleCommentChange();
+		window.close();
+	});
 
 	$(cbData.versionId).html("v" + chrome.runtime.getManifest().version);
 
@@ -306,7 +309,7 @@ function handleConfigureSaveButton()
 
 function handleBBSelector()
 {
-	handleCommentChange();
+	//handleCommentChange();
 }
 
 function isBBModeSelected()
@@ -360,7 +363,7 @@ function loadCommentList() {
 		var elemIdCurrent = cbData.commentListOptionBaseId + val;
 		var elemCurrent = document.getElementById(elemIdCurrent);
 		elemCurrent.selected = true;	
-		handleCommentChange();
+		//handleCommentChange();
 	}
 	
 	$(cbData.commentListId).attr("size", 20);
@@ -385,7 +388,9 @@ function handleCommentChange() {
 	var option = currentOption(cbData.commentListId);
 	var id = cbData.commentListOptionBaseId + option;
 	var elem = document.getElementById(id);
-
+	console.log('option=' + option);
+	console.log('id=' + id);
+	console.log('elem=' + elem);
 	cbData.commentIndex = parseInt(option);
 	storeSettings(null);
 	copyTextToClipboardAndPreview(elem.innerHTML);
