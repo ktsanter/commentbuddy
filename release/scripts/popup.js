@@ -80,7 +80,7 @@ $(document).ready(function() {
 	$(cbData.commentListId).change(_changeCommentList);
 	$(cbData.commentListId).click( function () {
 		handleCommentChange();
-		window.close();
+//		window.close();
 	});
 
 	$(cbData.versionId).html("v" + chrome.runtime.getManifest().version);
@@ -381,16 +381,14 @@ function scrollToComment()
 
 function _changeCommentList() {
 	handleCommentChange();
-	window.close();
+//	window.close();
 }
 
 function handleCommentChange() {
 	var option = currentOption(cbData.commentListId);
 	var id = cbData.commentListOptionBaseId + option;
 	var elem = document.getElementById(id);
-	console.log('option=' + option);
-	console.log('id=' + id);
-	console.log('elem=' + elem);
+
 	cbData.commentIndex = parseInt(option);
 	storeSettings(null);
 	copyTextToClipboardAndPreview(elem.innerHTML);

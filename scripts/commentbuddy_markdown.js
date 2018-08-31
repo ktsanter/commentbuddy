@@ -43,7 +43,7 @@ String.prototype.replaceAll = function(search, replacement) {
 function extraMarkdownReplaceAll(originalString, pattern, patternlength, opentoken, closetoken)
 {
 	var s = originalString;
-	
+
 	var result = s.match(pattern);
 	if (result !== null) {
 		for (var i = 0; i < result.length; i++) {
