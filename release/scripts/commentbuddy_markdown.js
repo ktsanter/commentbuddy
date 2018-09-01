@@ -41,7 +41,9 @@ function formatTextFromMarkup(text, forBlackBoard) {
 		result = result.substring(3);
 		result = result.substring(0, result.length-5);
 	}
-
+	
+	result = result.replaceAll('&amp;amp;', '&');
+console.log('result=' + result);
 	return result;
 }
 
