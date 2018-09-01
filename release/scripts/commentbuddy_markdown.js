@@ -23,6 +23,8 @@ function formatTextFromMarkup(text, forBlackBoard) {
 
 	var result = writer.render(parsed);
 	result = emojifyString(result, forBlackBoard);
+	result = formatIframeStrings(result, forBlackBoard);
+
 	result = result.replaceAll('<code>', codeblockspan);
 	result = result.replaceAll('<code class="language-function">', codeblockspan);
 	result = result.replaceAll('</code>', codeblockendspan);
@@ -30,7 +32,14 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	result = extraMarkdownReplaceAll(result, /\^\^\^[^^]*\^\^\^/g, 3, '<sub>', '</sub>'); 
 	result = extraMarkdownReplaceAll(result, /\^\^[^^]*\^\^/g, 2, '<sup>', '</sup>'); 
 	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, 2, '<s>', '</s>'); 
-	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, highlightendspan); 
+	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, highlightendspan);
+
+	var firstThree = result.substring(0,3);
+	var lastFive = result.substring(result.length-5, result.length);
+	if (firstThree == '<p>' && lastFive == '</p>\n') {
+		result = result.substring(3);
+		result = result.substring(0, result.length-5);
+	}
 
 	return result;
 }
@@ -52,4 +61,29 @@ function extraMarkdownReplaceAll(originalString, pattern, patternlength, opentok
 	}
 
 	return s;
+}
+
+function formatIframeStrings(originalString, forBlackBoard) {
+	var regex = /\?\?\[([0-9]*) ([0-9]*) \&quot\;(.*)\&quot\;]/i;
+	
+	const bailoutLimit = 100;
+	var s = originalString;
+	var parsed = regex.exec(s);
+	var count = 0;
+	while (parsed != null && count < bailoutLimit) {
+		var iframeString = makeIframeCode(parsed[1], parsed[2], parsed[3]);
+		s = s.replace(parsed[0], iframeString);
+		parsed = regex.exec(s);
+		count++;
+	}
+	
+	return s;
+}
+
+function makeIframeCode(width, height, url) {
+	var iframeString = '<iframe ';
+	iframeString += 'width="' + width + '" height="' + height + '" src="' + url + '">';
+	iframeString += '</iframe>';
+	
+	return iframeString;
 }

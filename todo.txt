@@ -1,4 +1,2 @@
-build app script web API
-look at preserving formatting info from Sheet
-   - looks like I can get font (style, size, color, etc.) and background
-add header row and filter to original?
+add header row to source data?
+add target="_blank" to links in MD

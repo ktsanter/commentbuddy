@@ -49,6 +49,8 @@ body {
 	font-size: 13px;
 	border: 1px solid var(--cb-popup-fg);
 	max-height: 130px;
+	max-width: 500px;
+	width: 100%;
 	overflow-x: auto;
 	overflow-y: auto;
 }

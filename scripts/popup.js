@@ -77,10 +77,9 @@ $(document).ready(function() {
 	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
 	$(cbData.bbSelectorId).change(handleBBSelector);
 	
-	$(cbData.commentListId).change(_changeCommentList);
+	//$(cbData.commentListId).change(_changeCommentList);
 	$(cbData.commentListId).click( function () {
 		handleCommentChange();
-//		window.close();
 	});
 
 	$(cbData.versionId).html("v" + chrome.runtime.getManifest().version);
@@ -377,11 +376,6 @@ function scrollToComment()
 		var elem = document.getElementById(id);
 		elem.scrollIntoView();
 	}
-}
-
-function _changeCommentList() {
-	handleCommentChange();
-//	window.close();
 }
 
 function handleCommentChange() {
