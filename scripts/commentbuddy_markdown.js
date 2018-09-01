@@ -19,9 +19,8 @@ function formatTextFromMarkup(text, forBlackBoard) {
 
 	text = text.replaceAll(lineBreak, "\n");
 
-	var parsed = reader.parse(text);
-    console.log('parsed=' + parsed);
-	
+	var parsed = reader.parse(text);  // tree now available for walking
+
 	var result = writer.render(parsed);
 	result = emojifyString(result, forBlackBoard);
 	result = formatIframeStrings(result, forBlackBoard);
@@ -34,6 +33,7 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	result = extraMarkdownReplaceAll(result, /\^\^[^^]*\^\^/g, 2, '<sup>', '</sup>'); 
 	result = extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, 2, '<s>', '</s>'); 
 	result = extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, highlightendspan);
+	result = result.replaceAll('<a href=', '<a target="_blank" href=');
 
 	var firstThree = result.substring(0,3);
 	var lastFive = result.substring(result.length-5, result.length);
