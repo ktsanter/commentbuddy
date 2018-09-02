@@ -4,7 +4,7 @@
   "name": "CommentBuddy",
   "short_name": "CB",
   "description": "Copy stored comments to clipboard",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "browser_action": {
     "default_icon": "cb_16_rounded.png",
     "default_popup": "popup.html",
