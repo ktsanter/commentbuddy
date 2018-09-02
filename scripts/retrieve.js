@@ -103,7 +103,8 @@ function parseTagAndCommentData(data)
 		
 		var comment = child[2].innerHTML;
 		comment = comment.replaceAll('<br>', String.fromCharCode(10) + String.fromCharCode(10));
-		commentList.push({"tags": tagsForThisComment, "comment": comment});
+		var hovertext = child[3].textContent;
+		commentList.push({"tags": tagsForThisComment, "comment": comment, "hovertext": hovertext});
 	}
 	
 	var uniqueTags = [];
@@ -126,6 +127,7 @@ function retrieveComments(searchString, tagSearchList)
 	for (var i = 0; i < fullComments.length; i++) {
 		var tagSet = fullComments[i].tags;
 		var comment = fullComments[i].comment;
+		var hovertext = fullComments[i].hovertext;
 		var potentialMatch = true;
 			
 		if (tagSearchList.length > 0) {
@@ -135,7 +137,7 @@ function retrieveComments(searchString, tagSearchList)
 		}
 		
 		if (potentialMatch && searchStringMatches(searchString, comment)) {
-			matchingComments.push(comment);
+			matchingComments.push({"comment": comment, "hovertext": hovertext});
 		}
 	}
 

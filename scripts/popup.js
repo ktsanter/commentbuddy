@@ -351,8 +351,9 @@ function loadCommentList() {
 		var elem = document.createElement('option');
 		var sIndex = ("00000" + i).slice(-5);
 		elem.id = cbData.commentListOptionBaseId + sIndex;
-		elem.text = commentList[i];
+		elem.text = commentList[i].comment;
 		elem.value = sIndex;
+		elem.title = commentList[i].hovertext;
 		elem.selected = false;
 		elemWrapper.appendChild(elem);
 	}
