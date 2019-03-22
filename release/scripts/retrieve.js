@@ -2,15 +2,15 @@
 
 function retrieveSettings(callback)
 {
-	chrome.storage.sync.get(['cbURL', 'cbBBSelector', 'cbSearch', 'cbTags', 'cbCommentIndex'], function(result) {
-		var urlString = '';
+	chrome.storage.sync.get(['cbSpreadsheetFileId', 'cbBBSelector', 'cbSearch', 'cbTags', 'cbCommentIndex'], function(result) {
+		var fileIdString = '';
 		var bbSelector = true;
 		var searchString = '';
 		var tagString = '';
 		var commentIndex = -1;
 
-		if (typeof result.cbURL != 'undefined') {
-			urlString = result.cbURL;
+		if (typeof result.cbSpreadsheetFileId != 'undefined') {
+			fileIdString = result.cbSpreadsheetFileId;
 		}
 		if (typeof result.cbBBSelector != 'undefined') {
 			bbSelector = result.cbBBSelector;
@@ -25,21 +25,21 @@ function retrieveSettings(callback)
 			commentIndex = result.cbCommentIndex;
 		}
 		
-		cbData.spreadsheetURL = urlString;
+		cbData.spreadsheetFileId = fileIdString;
 		document.getElementById(cbData.bbSelectorId.substring(1)).checked = bbSelector;
 		cbData.commentIndex = commentIndex;
-		$(cbData.urlInputId).val(urlString);
+		$(cbData.urlInputId).val(fileIdString);
 		$(cbData.commentSearchInputId).val(searchString);
 		$(cbData.tagSearchInputId).val(tagString);
 
 		callback();
-    });
+  });
 }
 
 function storeSettings(callback)
 {	
 	var keys = {
-		"cbURL": $(cbData.urlInputId).val(),
+		"cbSpreadsheetFileId": $(cbData.urlInputId).val(),
 		"cbBBSelector": document.getElementById(cbData.bbSelectorId.substring(1)).checked,
 		"cbSearch": $(cbData.commentSearchInputId).val(), 
 		"cbTags": $(cbData.tagSearchInputId).val(),
@@ -55,44 +55,23 @@ function storeSettings(callback)
 
 function retrieveTagAndCommentData(callback)
 {
-	cbData.tagarray = [];
+  cbData.tagarray = [];
 	cbData.tagset = new Set();
 	cbData.fullCommentList = [];
 	cbData.commentList = [];
-	
-	var url = cbData.spreadsheetURL; 	
-	var elemSelector = cbData.dataStagingId;
 
-    $(elemSelector).load(url, function(responseTxt, statusTxt, xhr){
-        if(statusTxt == "success") {
-			parseTagAndCommentData($(elemSelector).html());
-			callback();
-			
-		} else if(statusTxt == "error") {
-			showError('Unable to load file from: ' + url);
-			$(cbData.configureButtonId).prop("disabled", true);
-			showConfigureInput();
-            console.log("Error: " + xhr.status + ": " + xhr.statusText);
-			
-		} else {
-			console.log(xhr.status + ": " + xhr.statusText);
-		}
-    });
+  _getTagAndCommentData(cbData.spreadsheetFileId, parseTagAndCommentData, callback);
 }
 
-function parseTagAndCommentData(data)
+function parseTagAndCommentData(data, callback)
 {
-	var sheet = 0;
 	var fullTagSet = new Set();
 	var commentList = [];
 	
-	var nRows = $("[id^=" + sheet + "R]").length;
-	
-	for (var row = 0; row < nRows; row++) {
-		var rowdata = document.getElementById(sheet + "R" + row);
-		var child = rowdata.parentNode.childNodes;
+	for (var row = 0; row < data.cbdata.length; row++) {
+		var rowdata = data.cbdata[row];
 		
-		var tagEntry = child[1].innerHTML.split(",");
+		var tagEntry = rowdata.tags.split(",");
 		var tagsForThisComment = new Set();
 		for (var j = 0; j < tagEntry.length; j++) {
 			var tagText = tagEntry[j].toLowerCase().trim();
@@ -101,12 +80,12 @@ function parseTagAndCommentData(data)
 			tagsForThisComment.add(tagText);
 		}
 		
-		var comment = child[2].innerHTML;
+		var comment = rowdata.comment;
 		comment = comment.replaceAll('<br>', String.fromCharCode(10) + String.fromCharCode(10));
-		var hovertext = child[3].textContent;
+		var hovertext = rowdata.hovertext;
 		commentList.push({"tags": tagsForThisComment, "comment": comment, "hovertext": hovertext});
 	}
-	
+  
 	var uniqueTags = [];
 	var iterator = fullTagSet.values();
 	for (let entry of iterator) {
@@ -117,6 +96,8 @@ function parseTagAndCommentData(data)
 	cbData.commentData.tagarray = uniqueTags;
 	cbData.commentData.tagset = fullTagSet;
 	cbData.commentData.fullCommentList = commentList;
+  
+  callback();
 }
 
 function retrieveComments(searchString, tagSearchList)
@@ -156,4 +137,54 @@ function searchStringMatches(searchString, comment)
 	}
 	
 	return match;
+}
+
+//---------------------------------------------------------------
+// Google Web API for retrieving tag and comment data
+//---------------------------------------------------------------
+
+const API_BASE = 'https://script.google.com/a/mivu.org/macros/s/AKfycbzslpRyJsncJoufxogGhjSHB5bnQov_2flD3hPDryYNCHnH-VkX/exec';
+const API_KEY = 'MVcommentbuddyAPI';
+
+//--------------------------------------------------------------
+// build URL for use with Google sheet web API
+//--------------------------------------------------------------
+	function _buildApiUrl (datasetname, params) {
+    let url = API_BASE;
+    url += '?key=' + API_KEY;
+    url += datasetname && datasetname !== null ? '&dataset=' + datasetname : '';
+
+    for (var param in params) {
+      url += '&' + param + '=' + params[param].replace(/ /g, '%20');
+    }
+
+    //console.log('buildApiUrl: url=' + url);
+    
+    return url;
+  }
+  
+//--------------------------------------------------------------
+// use Google Sheet web API to get tag and comment data
+//--------------------------------------------------------------
+function _getTagAndCommentData (sourceFileId, callback1, callback2) {
+//	console.log('loading tag and comment data...');
+  var urlParams = {
+    sourcefileid: sourceFileId
+  };
+
+	fetch(_buildApiUrl('cbdata', urlParams))
+		.then((response) => response.json())
+		.then((json) => {
+			//console.log('json.status=' + json.status);
+			//console.log('json.data: ' + JSON.stringify(json.data));
+			if (json.status !== 'success') {
+				//console.log('json.message=' + json.message);
+			} else {
+				callback1(json.data, callback2);
+			}
+		})
+		.catch((error) => {
+			console.log('Unexpected error loading tag and comment data');
+			console.log(error);
+		});
 }

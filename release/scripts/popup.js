@@ -2,7 +2,7 @@
 
 var cbData = {
 	"helpURL": "https://ktsanter.github.io/commentbuddy/",
-	"spreadsheetURL": "",
+	"spreadsheetFileId": "",
 	"commentData": {},
 	"commentIndex": -1,
 
@@ -91,9 +91,9 @@ function loadTagData() {
 	clearAllData();
 	retrieveSettings(
 		function() {
-			if (cbData.spreadsheetURL == null || cbData.spreadsheetURL == '') {
+			if (cbData.spreadsheetFileId == null || cbData.spreadsheetFileId == '') {
 				handleConfigureButton();
-				showError("Please enter the link for your published spreadsheet and press 'Save'");
+				showError("Please enter the ID for your comment spreadsheet and press 'Save'");
 				$(cbData.configureButtonId).prop("disabled",true);
 				
 			} else {
@@ -279,7 +279,7 @@ function handleConfigureButton()
 	var sel = $(cbData.urlContentId);
 	sel.toggle();
 	if (sel.is(":visible")) {
-		sel.value = cbData.spreadsheetURL;
+		sel.value = cbData.spreadsheetFileId;
 	}
 }
 
@@ -295,7 +295,7 @@ function hideConfigureInput()
 
 function handleConfigureSaveButton()
 {
-	cbData.spreadsheetURL = $(cbData.urlInputId).value;
+	cbData.spreadsheetFileId = $(cbData.urlInputId).value;
 	cbData.commentIndex = -1;
 	$(cbData.commentSearchInputId).val('');
 	$(cbData.tagSearchInputId).val('');
