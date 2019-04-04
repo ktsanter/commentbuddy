@@ -14,7 +14,7 @@
 
 body {
 	color: var(--MV-black);
-	background-color: var(--MV-white);
+	background-color: var(--very-light-gray);
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 13px;
 	margin-left: 12px;
@@ -24,10 +24,15 @@ body {
 .title {
   font-size: 14px;
   color: var(--MV-white);
-  background-color: var(--MV-light-teal);
+  background-color: var(--MV-dark-teal);
   border: 1px solid var(--MV-black);
   border-radius: 6px;
+  padding-left: 4px;
   margin-bottom: 10px;  
+}
+
+td {
+  padding-bottom: 10px;
 }
 
 textarea {
@@ -35,17 +40,36 @@ textarea {
   font-size: 12px;
 }
 
-span.noneditable, textarea.noneditable {
+span.noneditable, div.noneditable {
   background-color: var(--very-light-gray);
-  border: 1px solid var(--MV-black);
+  border: 1px solid var(--MV-light-gray);
   font-size: 12px;  
 }
 
-span.noneditable {
+span.noneditable, div.noneditable {
   padding-right: 4px;
   padding-left: 4px;
 }
 
+span.noneditable {
+  padding-top: 4px;
+  padding-bottom: 4px;   
+}  
+
 td.label {
   vertical-align: top;
+}
+
+.control-button {
+	color: var(--MV-white);
+	background-color: var(--MV-dark-teal);
+	border: 1px solid var(--MV-black);
+	border-radius: 6px;  
+}
+
+span.status {
+  color: blue;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: italic;
 }
