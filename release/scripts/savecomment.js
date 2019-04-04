@@ -28,7 +28,7 @@ const app = function () {
         fileIdString = result.cbSpreadsheetFileId;
       }
       if (typeof result.cbCommentText != 'undefined') {
-        newCommentText = result.cbCommentText;
+        newCommentText = _sanitizeComment(result.cbCommentText);
       }
       
       settings.fileid = fileIdString;
@@ -36,6 +36,12 @@ const app = function () {
 
       callback();
     });
+  }
+  
+  function _sanitizeComment(orig) {
+    var sanitized = orig.replace(/[\u00A0]/g,' ');  // nbsp character
+    
+    return sanitized;
   }
   
   //-----------------------------------------------------------------------------
