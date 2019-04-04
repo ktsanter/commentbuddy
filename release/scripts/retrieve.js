@@ -167,7 +167,7 @@ const API_KEY = 'MVcommentbuddyAPI';
 // use Google Sheet web API to get tag and comment data
 //--------------------------------------------------------------
 function _getTagAndCommentData (sourceFileId, callback1, callback2) {
-//	console.log('loading tag and comment data...');
+// console.log('loading tag and comment data...');
   var urlParams = {
     sourcefileid: sourceFileId
   };
@@ -178,7 +178,7 @@ function _getTagAndCommentData (sourceFileId, callback1, callback2) {
 			//console.log('json.status=' + json.status);
 			//console.log('json.data: ' + JSON.stringify(json.data));
 			if (json.status !== 'success') {
-				//console.log('json.message=' + json.message);
+				console.log('json.message=' + json.message);
 			} else {
 				callback1(json.data, callback2);
 			}
