@@ -1,9 +1,13 @@
 //
-// TODO: add markdown for previewcomment
+// TODO: add MarkDown quick reference link or popup
 //
 
 const app = function () {
   const PAGE_TITLE = 'Store new entry in CommentBuddy repository';
+  
+  const UP_ARROW = '&#9650;'; //'&#11181;';
+  const DOWN_ARROW = '&#9660;'; //'&#11183;';
+  
   const page = {};
   
   const settings = {};
@@ -94,12 +98,15 @@ const app = function () {
     
     var elemLabel = document.createElement('span');
     elemLabel.innerHTML = 'spreadsheet ID ';
+    elemLabel.title = 'file ID for Google Sheet use to store comment data';
     elemCell1.appendChild(elemLabel);
     
-    var elemVal = document.createElement('span');
-    elemVal.classList.add('noneditable');
-    elemVal.innerHTML = settings.fileid;
-    elemCell2.appendChild(elemVal);
+    var elemLink = document.createElement('a');
+    elemLink.href = 'https://drive.google.com/open?id=' + settings.fileid;
+    elemLink.target = '_blank';
+    elemLink.title = 'open comment repository spreadsheet';
+    elemLink.innerHTML = settings.fileid;
+    elemCell2.appendChild(elemLink);
     
     elemContainer.appendChild(elemCell1);
     elemContainer.appendChild(elemCell2);
@@ -116,13 +123,15 @@ const app = function () {
 
     var elemLabel = document.createElement('span');
     elemLabel.innerHTML = 'tags';
+    elemLabel.title = 'one or more tags for looking up comment - use no spaces in tag names and commas to separate them';
     elemCell1.appendChild(elemLabel);
 
     var elemVal = document.createElement('input');
-    elemVal.type = 'text';
+    elemVal.type = 'text'
+    elemVal.classList.add('user-input');
     elemVal.style.width = '100%';
     elemVal.maxlength = 200;
-    elemVal.innerHTML = settings.newcommenttext;
+    elemVal.placeholder = 'tag1, tag2, ...';
     elemCell2.appendChild(elemVal);
     
     elemContainer.appendChild(elemCell1);
@@ -142,12 +151,15 @@ const app = function () {
 
     var elemLabel = document.createElement('span');
     elemLabel.innerHTML = 'hover text';
+    elemLabel.title = 'hover text displayed when selecting in CommentBuddy';
     elemCell1.appendChild(elemLabel);
 
     var elemVal = document.createElement('input');
     elemVal.type = 'text';
+    elemVal.classList.add('user-input');
     elemVal.style.width = '100%';
     elemVal.maxlength = 200;
+    elemVal.placeholder = 'optional hover text...';
     elemVal.innerHTML = settings.hovertext;
     elemCell2.appendChild(elemVal);
     
@@ -169,7 +181,15 @@ const app = function () {
     var elemLabel = document.createElement('span');
     var elemLabel = document.createElement('span');
     elemLabel.innerHTML = 'new comment ';
+    elemLabel.title = 'text for new comment (before formatting)';
     elemCell1.appendChild(elemLabel);
+
+    var elemButton = document.createElement('button');
+    elemButton.classList.add('control-button');
+    elemButton.classList.add('control-button-small');
+    elemButton.innerHTML =  DOWN_ARROW;
+    elemButton.title = 'show formatting reference info';
+    elemCell1.appendChild(elemButton);
     
     var elemVal = document.createElement('textarea');
     elemVal.rows = 14;
@@ -177,9 +197,14 @@ const app = function () {
     elemVal.innerHTML = settings.newcommenttext;
     elemCell2.appendChild(elemVal);
     
+    var elemMarkdownReference = _renderMarkdownReference();
+    elemCell2.appendChild(elemMarkdownReference);
+
     elemContainer.appendChild(elemCell1);
     elemContainer.appendChild(elemCell2);
-    
+        
+    page.mdrefbutton = elemButton;
+    page.markdownreference = elemMarkdownReference;
     page.newcomment = elemVal;
     
     return elemContainer;
@@ -195,6 +220,7 @@ const app = function () {
     var elemLabel = document.createElement('span');
     var elemLabel = document.createElement('span');
     elemLabel.innerHTML = 'preview ';
+    elemLabel.title = 'comment after formatting';
     elemCell1.appendChild(elemLabel);
     
     var elemVal = document.createElement('div');
@@ -236,9 +262,64 @@ const app = function () {
     return elemContainer;
   }
   
+  function _renderMarkdownReference() {
+    var markdownItems = [
+      '*italics*',
+      '**bold**',
+      '%%highlight%%',
+      '~~strikethrough~~',
+      'superscript: x^^2^^',
+      'subscript: x^^^i^^^',
+      '-first item<br>-second item'
+    ];
+    var elemContainer = document.createElement('div');
+    
+    elemContainer.classList.add('reference');
+    elemContainer.classList.add('hide-me');
+    
+    var elemTable = document.createElement('table');
+    elemTable.classList.add('table-borders');
+    
+    var elemHeaderRow = document.createElement('tr');
+    var elemHeaderCell1 = document.createElement('th');
+    var elemHeaderCell2 = document.createElement('th');
+    elemHeaderCell1.classList.add('table-borders');
+    elemHeaderCell2.classList.add('table-borders');
+    elemHeaderCell1.innerHTML = 'unformatted';
+    elemHeaderCell2.innerHTML = 'formatted';
+    elemHeaderRow.appendChild(elemHeaderCell1);
+    elemHeaderRow.appendChild(elemHeaderCell2);
+    elemTable.appendChild(elemHeaderRow);
+    
+    for (var i = 0; i < markdownItems.length; i++) {
+      elemTable.appendChild(_renderMarkdownReferenceItem(markdownItems[i]));
+    }
+    elemContainer.appendChild(elemTable);
+    
+    return elemContainer;
+  }
+  
+  function _renderMarkdownReferenceItem(unformatted) {
+    var elemRow = document.createElement('tr');
+    var elemUnformatted = document.createElement('td');
+    var elemFormatted = document.createElement('td');
+    
+    elemUnformatted.classList.add('table-borders');
+    elemFormatted.classList.add('table-borders');
+    
+    elemUnformatted.innerHTML = unformatted;
+    elemFormatted.innerHTML = _markdownToHTML(unformatted);
+    
+    elemRow.appendChild(elemUnformatted);
+    elemRow.appendChild(elemFormatted);
+    
+    return elemRow;
+  }
+  
   function _addHandlers() {
     page.tags.addEventListener('input', _handleTagsChange, false);
     page.newcomment.addEventListener('input', _handleCommentChange, false);
+    page.mdrefbutton.addEventListener('click', _handleMarkdownRefClick, false);
     page.hovertext.addEventListener('input', _handleHoverTextChange, false);
     page.savebutton.addEventListener('click', _handleSaveClick, false);
   }
@@ -275,6 +356,23 @@ const app = function () {
     page.statusmsg.innerHTML = '';
   }
   
+  function _toggleMarkdownRefVisibility() {
+    var elem = page.markdownreference;
+    
+    if (elem.classList.contains('hide-me')) {
+      elem.classList.remove('hide-me');
+      elem.classList.add('show-me');
+      page.mdrefbutton.innerHTML = UP_ARROW;
+      page.mdrefbutton.title = 'hide formatting reference info';
+      
+    } else if (elem.classList.contains('show-me')) {
+      elem.classList.remove('show-me');
+      elem.classList.add('hide-me');
+      page.mdrefbutton.innerHTML = DOWN_ARROW;
+      page.mdrefbutton.title = 'show formatting reference info';
+    }
+  }
+  
   //------------------------------------------------------------------
   // handlers
   //------------------------------------------------------------------
@@ -293,6 +391,10 @@ const app = function () {
   
   function _handleHoverTextChange(e) {
     _clearStatusMessage();
+  }
+  
+  function _handleMarkdownRefClick(e) {
+    _toggleMarkdownRefVisibility();
   }
   
   //------------------------------------------------------------------
