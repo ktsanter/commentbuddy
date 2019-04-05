@@ -268,9 +268,13 @@ const app = function () {
       '**bold**',
       '%%highlight%%',
       '~~strikethrough~~',
-      'superscript: x^^2^^',
-      'subscript: x^^^i^^^',
-      '-first item<br>-second item'
+      'x^^2^^\n\nx^^^i^^^',
+      'this is an `inline code` example',
+      '- first item\n\n- second item',
+      '1. first item\n\n2. second item',
+      'an [inline link](https://www.google.com "go to google.com")',
+      '![alt text](http://bit.ly/2D1Hodh "I am a smiley face")',
+      '# this is H1\n\n## this is H2\n\n### this is H3\n\n#### this is H4\n\n##### this is H5'
     ];
     var elemContainer = document.createElement('div');
     
@@ -307,7 +311,7 @@ const app = function () {
     elemUnformatted.classList.add('table-borders');
     elemFormatted.classList.add('table-borders');
     
-    elemUnformatted.innerHTML = unformatted;
+    elemUnformatted.innerHTML = unformatted.replace(/\n\n/g, '<br>');
     elemFormatted.innerHTML = _markdownToHTML(unformatted);
     
     elemRow.appendChild(elemUnformatted);

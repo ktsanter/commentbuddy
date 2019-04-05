@@ -103,3 +103,13 @@ table.table-borders {
 table.table-borders, tr.table-borders, td.table-borders, th.table-borders {
   border: 1px solid var(--MV-black);
 }
+
+th.table-borders {
+	color: var(--MV-white);
+	background-color: var(--MV-dark-teal);
+}  
+
+p, ul, ol {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}

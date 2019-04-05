@@ -31,7 +31,8 @@ body {
   margin-bottom: 10px;  
 }
 
-td {
+
+td.label {
   padding-bottom: 10px;
 }
 
@@ -60,6 +61,11 @@ td.label {
   vertical-align: top;
 }
 
+.user-input {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}
+
 .control-button {
 	color: var(--MV-white);
 	background-color: var(--MV-dark-teal);
@@ -67,9 +73,43 @@ td.label {
 	border-radius: 6px;  
 }
 
+.control-button-small {
+  font-size: 11px;
+}
+
 span.status {
   color: blue;
   font-size: 12px;
   font-weight: bold;
   font-style: italic;
+}
+
+div.reference {
+  font-size: 12px;
+}
+
+.show-me {
+  display: block;
+}
+
+.hide-me {
+  display: none;
+}
+
+table.table-borders {
+  border-collapse: collapse;
+}
+
+table.table-borders, tr.table-borders, td.table-borders, th.table-borders {
+  border: 1px solid var(--MV-black);
+}
+
+th.table-borders {
+	color: var(--MV-white);
+	background-color: var(--MV-dark-teal);
+}  
+
+p, ul, ol {
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
