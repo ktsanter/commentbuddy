@@ -10,6 +10,8 @@ var cbData = {
 	
 	"dataStagingId": "#dataStage",
 	"versionId": "#spanVersion",
+  
+  "message": "#spanMessage",
 	
 	"retrieveButtonId": "#btnRetrieve",
 	"configureButtonId": "#btnConfigure",
@@ -98,6 +100,7 @@ function loadTagData() {
 				
 			} else {
 				hideError();
+        $(cbData.message).html('...loading');
 				$(cbData.configureButtonId).removeAttr("disabled");
 				retrieveTagAndCommentData(buildTagSelectHTML);
 			}
@@ -119,6 +122,7 @@ function clearAllData()
 
 function buildTagSelectHTML()
 {
+  $(cbData.message).html('');
 	var maxTagsInColumn = 16;
 	var container = $(cbData.tagSelectContentId);
 	var selectName = cbData.tagSelectId;

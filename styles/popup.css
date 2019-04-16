@@ -24,6 +24,10 @@ body {
 	padding-left: 4px;
 }
 
+.cb-message {
+  font-style: italic;
+}
+
 .cb-version {
 	font-size: 12px;
 	float:right;

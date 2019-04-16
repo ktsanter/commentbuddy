@@ -4,24 +4,38 @@
   "name": "CommentBuddy",
   "short_name": "CB",
   "description": "Copy stored comments to clipboard",
-  "version": "0.2.03",
+  "version": "0.2.05",
   "browser_action": {
     "default_icon": "cb_16_rounded.png",
     "default_popup": "popup.html",
     "default_title": "Copy stored comments to clipboard"
   },
+  
   "permissions": [
     "storage",
     "clipboardWrite",
     "contextMenus",
     "tabs"
   ],
+  
   "background" : {
     "scripts": ["scripts/background.js"]
   },
+  
+  "commands": {
+    "my-feature": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+9",
+        "mac": "Ctrl+Shift+9"
+      },
+      "description": "launch_commentstore_page"
+    }
+  },
+  
   "icons": {
      "16": "cb_16_rounded.png",
 	 "128": "cb_128_rounded.png"
    },
+   
    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
