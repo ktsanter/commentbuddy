@@ -17,7 +17,6 @@ var cbData = {
 	"configureButtonId": "#btnConfigure",
 	"helpButtonId": "#btnHelp",
 	"configureSaveButtonId": "#btnSaveURL",
-	"bbSelectorId": "#bbSelector",
 	
 	"urlContentId": "#urlContent",
 	"urlInputId": "#inputCommentURL",
@@ -77,7 +76,6 @@ $(document).ready(function() {
 	$(cbData.configureButtonId).click(handleConfigureButton);
 	$(cbData.helpButtonId).click(handleHelpButton);
 	$(cbData.configureSaveButtonId).click(handleConfigureSaveButton);
-	$(cbData.bbSelectorId).change(handleBBSelector);
 	
 	//$(cbData.commentListId).change(_changeCommentList);
 	$(cbData.commentListId).click( function () {
@@ -120,8 +118,14 @@ function clearAllData()
 	$(cbData.commentListId).html('');
 }
 
-function buildTagSelectHTML()
+function buildTagSelectHTML(statusVal)
 {
+  if (!statusVal.success) {
+    console.log('error retrieving tag data, error=' + statusVal.error + ', errmsg=' + statusVal.errmsg);
+    showError(statusVal.error);
+    return;
+  }
+  
   $(cbData.message).html('');
 	var maxTagsInColumn = 16;
 	var container = $(cbData.tagSelectContentId);
@@ -310,14 +314,9 @@ function handleConfigureSaveButton()
 	$(cbData.urlContentId).hide();
 }
 
-function handleBBSelector()
-{
-	//handleCommentChange();
-}
-
 function isBBModeSelected()
 {
-	return document.getElementById(cbData.bbSelectorId.substring(1)).checked;
+	return true;//return document.getElementById(cbData.reectorId.substring(1)).checked;
 }
 
 function handleRetrieveButton()

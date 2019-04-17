@@ -79,6 +79,10 @@ body {
 	background-color: var(--cb-popup-bg);
 }
 
+.cb-right-btn {
+  float: right;
+}
+
 .cb-control-align {
 	text-align: left;
 }

@@ -26,7 +26,7 @@ function retrieveSettings(callback)
 		}
 		
 		cbData.spreadsheetFileId = fileIdString;
-		document.getElementById(cbData.bbSelectorId.substring(1)).checked = bbSelector;
+		//document.getElementById(cbData.bbSelectorId.substring(1)).checked = bbSelector;
 		cbData.commentIndex = commentIndex;
 		$(cbData.urlInputId).val(fileIdString);
 		$(cbData.commentSearchInputId).val(searchString);
@@ -40,7 +40,7 @@ function storeSettings(callback)
 {	
 	var keys = {
 		"cbSpreadsheetFileId": $(cbData.urlInputId).val(),
-		"cbBBSelector": document.getElementById(cbData.bbSelectorId.substring(1)).checked,
+		"cbBBSelector": true, //document.getElementById(cbData.bbSelectorId.substring(1)).checked,
 		"cbSearch": $(cbData.commentSearchInputId).val(), 
 		"cbTags": $(cbData.tagSearchInputId).val(),
 		"cbCommentIndex": cbData.commentIndex
@@ -97,7 +97,7 @@ function parseTagAndCommentData(data, callback)
 	cbData.commentData.tagset = fullTagSet;
 	cbData.commentData.fullCommentList = commentList;
   
-  callback();
+  callback({"success": true});
 }
 
 function retrieveComments(searchString, tagSearchList)
@@ -186,5 +186,6 @@ function _getTagAndCommentData (sourceFileId, callback1, callback2) {
 		.catch((error) => {
 			console.log('Unexpected error loading tag and comment data');
 			console.log(error);
+      callback2({"success": false, "error": "Unexpected error loading tag and comment data", "errmsg": error});
 		});
 }
