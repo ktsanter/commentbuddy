@@ -316,7 +316,7 @@ function handleConfigureSaveButton()
 
 function isBBModeSelected()
 {
-	return true;//return document.getElementById(cbData.reectorId.substring(1)).checked;
+	return false;//true;//return document.getElementById(cbData.reectorId.substring(1)).checked;
 }
 
 function handleRetrieveButton()
@@ -389,15 +389,15 @@ function handleCommentChange() {
 
 	cbData.commentIndex = parseInt(option);
 	storeSettings(null);
-	copyTextToClipboardAndPreview(elem.innerHTML);
+	copyTextToClipboardAndPreview(elem.text);
 }
 
 function currentOption(id) {
 	return $(id).find('option:selected').val();
 }
 
-function copyTextToClipboardAndPreview(text) {
-	var formattedText = formatTextFromMarkup(text, isBBModeSelected());
+function copyTextToClipboardAndPreview(txt) {
+	var formattedText = formatTextFromMarkup(txt, false);//isBBModeSelected());
 	var target = cbData.clipboardCopyTarget;
 	var btn = cbData.clipboardCopyBtn;
 	var preview = cbData.commentPreviewSelector;

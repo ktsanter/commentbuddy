@@ -1,4 +1,4 @@
-function formatTextFromMarkup(text, forBlackBoard) {
+function formatTextFromMarkup(txt, forBlackBoard) {
 	var codeblockspan = "<span style="
 	codeblockspan += "\"font-family: 'courier new', courier; ";
 	if (forBlackBoard) {
@@ -17,9 +17,9 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	var reader = new commonmark.Parser();
 	var writer = new commonmark.HtmlRenderer();
 
-	text = text.replaceAll(lineBreak, "\n");
+	txt = txt.replaceAll(lineBreak, "\n");
 
-	var parsed = reader.parse(text);  // tree now available for walking
+	var parsed = reader.parse(txt);  // tree now available for walking
 
 	var result = writer.render(parsed);
 	result = emojifyString(result, forBlackBoard);
@@ -43,7 +43,7 @@ function formatTextFromMarkup(text, forBlackBoard) {
 	}
 	
 	result = result.replaceAll('&amp;amp;', '&');
-console.log('result=' + result);
+
 	return result;
 }
 
