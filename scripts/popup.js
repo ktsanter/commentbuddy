@@ -345,7 +345,7 @@ function handleRetrieveButton()
 function loadCommentList() {
 	var commentList = cbData.commentData.commentList;
 	var elemWrapper = $(cbData.commentListId)[0];
-	
+
 	while (elemWrapper.childNodes.length > 0) {
 		elemWrapper.removeChild(elemWrapper.childNodes[0]);
 	}
@@ -386,10 +386,12 @@ function handleCommentChange() {
 	var option = currentOption(cbData.commentListId);
 	var id = cbData.commentListOptionBaseId + option;
 	var elem = document.getElementById(id);
-
 	cbData.commentIndex = parseInt(option);
+  
+  var comment = cbData.commentData.commentList[cbData.commentIndex].comment;
+
 	storeSettings(null);
-	copyTextToClipboardAndPreview(elem.text);
+	copyTextToClipboardAndPreview(comment);//(elem.innerHTML); //elem.text);
 }
 
 function currentOption(id) {
