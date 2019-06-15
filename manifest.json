@@ -7,7 +7,7 @@
   
   "description": "Copy stored comments to clipboard",
   
-  "version": "0.2.09",
+  "version": "0.2.10",
   
   "browser_action": {
     "default_icon": "cb_16_rounded.png",

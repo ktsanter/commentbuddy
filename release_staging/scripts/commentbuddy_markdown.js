@@ -6,8 +6,8 @@ function formatTextFromMarkup(txt, forBlackBoard) {
 	}
 	codeblockspan += "background: #F1F1F1;";
 	codeblockspan += "border: 1px solid #E1E1E1;";
-    codeblockspan += "border-radius: 4px;";
-    codeblockspan += "display:inline-block;";
+  codeblockspan += "border-radius: 4px;";
+  codeblockspan += "display:inline-block;";
 	codeblockspan += "\">";
 	var codeblockendspan = '</span>';
 	var highlightspan = "<span style=\"background-color: #FFFF00\">";
