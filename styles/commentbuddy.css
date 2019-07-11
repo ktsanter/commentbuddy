@@ -1,0 +1,157 @@
+/*-----------------------------------------------
+ * CommentBuddy extension class
+ *-----------------------------------------------
+ * TODO: change px to em where feasible
+ *-----------------------------------------------*/
+.commentbuddy-main {
+  box-sizing: border-box;  
+  background-color: #eee;
+  border-radius: 8px;
+  display: inline-block;
+  overflow-y: hidden;
+  padding: 0.2em 0.6em;
+  filter: drop-shadow(6px 6px 4px #444);
+  min-width: 32em;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(315deg, rgba(80,117,178,1) 0%, rgba(138,181,252,1) 100%);
+}
+
+/*--- nav menu ----------------------------*/
+.commentbuddy-topnav {
+  overflow: hidden;
+  background-color: #777;/*#333;*/
+  border-radius: 8px 8px 0px 0px;
+  position: relative;
+  margin-top: -4px;
+  margin-right: -0.6em;
+  margin-left: -0.6em;  
+}
+
+.commentbuddy-topnav #navLinks {
+  display: none;
+}
+
+#navLinks a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.commentbuddy-topnav a {
+  color: white;
+  padding: 6px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+.commentbuddy-title {
+  background-color: #426296; /* #0b47a8;*/
+  color: white;
+}
+
+/* Style the hamburger menu */
+.commentbuddy-topnav a.icon {
+  color: black;
+  background: #ddd;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+/*--- end of nav menu ----------------------------*/
+
+/*---- "about" section ---*/
+.commentbuddy-about {
+  display: none;
+  border: 1px solid black;
+  border-radius: 8px;
+  background-color: #ccc;
+  padding: 0.4em 0.4em;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+.commentbuddy-about-label {
+  display: inline-block;
+  font-weight: bold;
+}
+
+.commentbuddy-about-version {
+  font-size: 0.9em;
+}
+
+.commentbuddy-about-close {
+  float: right;
+}
+
+.commentbuddy-about-detail {}
+
+/*---- content -----*/
+.commentbuddy-content {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+.commentbuddy-content-section {
+  margin-bottom: 0.4em;
+}
+
+.commentbuddy-content-section-label {
+  display: inline-block;
+  min-width: 3.4em;
+}
+
+.commentbuddy-content-section-control {
+  font-size: 0.9em;
+  width: 85%;
+}
+
+.commentbuddy-tagicon {
+  font-size: 1.7em;
+  vertical-align: top;
+}
+
+#cbTagListOpen {}
+#cbTagListClose { display: none; }
+
+#cbTagList {
+  display: none;
+  column-count: 3;
+  column-gap: 0em;
+  background-color: #ddd;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  height: fit-content;
+  max-height: 37em;
+  overflow-x: auto;
+  margin-top: 0.4em;
+  width: 100%;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+}
+
+.commentbuddy-taglist-item {
+  font-size: 0.9em;
+}
+
+#cbSelectComment {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 0.9em;
+  overflow-x: scroll;
+  overflow-y: auto;
+  width: 100%;
+  min-width: 36em;
+}
+
+#cbPreview {
+  background-color: #ddd;
+  color: #444;
+  font-size: 0.9em;
+  padding-left: 0.1em;
+  padding-right: 0.1em;
+  max-height: 10.5em;
+	max-width: 41em;
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: auto;  
+}

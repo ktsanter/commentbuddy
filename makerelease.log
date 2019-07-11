@@ -1,3 +1,61 @@
-time is 06/15/2019 10:14:16.84 
-cb_release_0.2.10.zip already exists 
-*** release package build aborted *** 
+time is 07/11/2019 10:26:47.92 
+C:help.html
+C:index.html
+C:popup.html
+C:savecomment.html
+4 File(s) copied
+C:manifest.json
+1 File(s) copied
+C:LICENSE
+1 File(s) copied
+C:cb2_logo_128.png
+C:cb2_logo_16.png
+C:cb2_logo_inverted_128.png
+3 File(s) copied
+styles\commentbuddy.css
+styles\commentbuddy_help.css
+styles\help.css
+styles\popup.css
+styles\savecomment.css
+5 File(s) copied
+scripts\background.js
+scripts\chromesyncstorage.js
+scripts\clipboard.min.js
+scripts\clipboard_copy.js
+scripts\commentbuddy.js
+scripts\commentbuddy_help.js
+scripts\commentbuddy_markdown.js
+scripts\commonmark.min.js
+scripts\commonmark_min.js
+scripts\content.js
+scripts\create_element.js
+scripts\emojifier.js
+scripts\google_webapp_interface.js
+scripts\help.js
+scripts\jquery-1.6.1.min.js
+scripts\markdowntohtml.js
+scripts\popup.js
+scripts\require.js
+scripts\require_help.js
+scripts\require_popup.js
+scripts\require_savecomment.js
+scripts\retrieve.js
+scripts\savecomment.js
+scripts\standard_notice.js
+24 File(s) copied
+
+7-Zip 18.01 (x64) : Copyright (c) 1999-2018 Igor Pavlov : 2018-01-28
+
+Scanning the drive:
+2 folders, 38 files, 421142 bytes (412 KiB)
+
+Creating archive: ..\cb_release_2.03.zip
+
+Add new data to archive: 2 folders, 38 files, 421142 bytes (412 KiB)
+
+
+Files read from disk: 38
+Archive size: 151442 bytes (148 KiB)
+Everything is Ok
+release package for "CommentBuddy" is complete 
+release file name: cb_release_2.03.zip 

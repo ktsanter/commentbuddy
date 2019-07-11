@@ -1,246 +1,80 @@
-.cb-colorscheme {
-	--cb-popup-fg: #185A6A;
-	--cb-popup-bg: #EAEAEA;
-}
-
+/*----------------------------------------------------------------------
+ * CommentBuddy popup
+ *----------------------------------------------------------------------
+ * TODO: change px to em where feasible
+ *----------------------------------------------------------------------*/
 body {
-	overflow-x: auto;
-	width: 600px;
-	height: 600px;
-	margin:0;
-	padding:0;
-	color: var(--cb-popup-fg);
-	background-color: var(--cb-popup-bg);
-}
-
-.cb-title {
-	color: var(--cb-popup-bg);
-	background-color: var(--cb-popup-fg);
-	border-style: solid;
-	border-color: var(--cb-popup-bg);
-	border-width: 1px;
-	border-radius: 5px;
-	font-size: 15px;
-	padding-left: 4px;
-}
-
-.cb-message {
-  font-style: italic;
-}
-
-.cb-version {
-	font-size: 12px;
-	float:right;
-	padding-right: 4px;
-	padding-top: 2px;
-}
-
-.cb-error {
-	font-size: 15px;
-	color: red;
-	font-weight: bold;
-	padding-left: 4px;
-}
-
-.cb-label {
-	width: 10%;
-	font-family: arial;
-	font-size: 13px;
-	padding-top: 3px;
-}
-
-.cb-preview {
-	font-size: 13px;
-	border: 1px solid var(--cb-popup-fg);
-	max-height: 130px;
-	max-width: 500px;
-	width: 100%;
-	overflow-x: auto;
-	overflow-y: auto;
-}
-
-.cb-data {
-	width: 85%;
-}
-
-.cb-row {
-	height: 8%;
-}
-
-.cb-btn {
-	color: var(--cb-popup-bg);
-	background-color: var(--cb-popup-fg);
-	border: 1px solid var(--cb-popup-fg);
-	border-radius: 8px;
-}
-
-.cb-btn:disabled {
-	color: var(--cb-popup-fg);
-	background-color: var(--cb-popup-bg);
-}
-
-.cb-right-btn {
-  float: right;
-}
-
-.cb-control-align {
-	text-align: left;
-}
-
-.cb-tag-align {
-	vertical-align: top;
-}
-
-.cb-configure{
-	width: 85%;
-}
-
-.cb-comment-search{
-	width: 100%;
-}
-
-.cb-tag-search {
-	width: 100%;
-}
-
-.cb-tagsearch-label {
-	width: 100%;
-	height: 20px;
 	color: black;
-	display: inline-block;
-	background-color: var(--cb-popup-bg);
-	border: 1px solid var(--cb-popup-fg);
+	background-color: transparent;
+	/*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
 	font-size: 13px;
-	margin-bottom: 10px;
+	margin-left: 12px;
+	margin-right: 12px;
+  min-width: 20em;
+  /*max-width: 40em;*/
+  width: 38em;
+  height: 44em;
+  overflow-x: auto;
 }
 
-.cb-tag-selection-area {
-	border: 1px solid var(--cb-popup-fg);
-	overflow-x:scroll; 
-	width: 500px;
+/* reconfigure dialog */
+.reconfigure {
+  display: inline-block;
+  border: 1px solid black;
+  border-radius: 6px;
+  background: linear-gradient(315deg, rgba(80,117,178,1) 0%, rgba(138,181,252,1) 100%);
+  filter: drop-shadow(6px 6px 4px #444);
+  min-width: 38em;
 }
 
-.cb-comment-select {
-  overflow-x: scroll;
-  overflow-y: auto;
-  font-family: arial;
-  font-size: 13px;
+.reconfigure-title {
+  color: white;
+  background-color: #0b47a8;
+  border-radius: 6px 6px 0px 0px;
+  padding-top: 6px;
+}
+
+.reconfigure-title-label {
+  display: inline-block;
+  margin-bottom: 6px;
+  margin-left: 4px;
+}
+
+.reconfigure-icon {
+  float: right;
+  margin-left: 0.5em;
+}
+
+.reconfigure-item {
+  margin: 10px 8px;
+}
+
+.reconfigure-input {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  margin-left: 4px; 
   width: 100%;
 }
 
-.cb-align-right {
-	float: right;
-	width: 100%;
-	color: var(--cb-popup-bg);
-	background-color: var(--cb-popup-fg);
-	border-radius: 8px;
+/*-- standard error and notice tools --*/
+.standard_error {
+  display: none;
+  font-style: italic;
+  color: blue;
+  margin-bottom: 0.4em;;
 }
 
-.cb-formatted-comment {
-	font: 12px arial, sans-serif;
-	color:black;
-	background-color:white;
+.standard-notice {
+ /* float: right;  */
+  font-size: 0.9em;
+  font-style: italic;
+  margin-left: 0.4em;
+  margin-right: 0.2em;
 }
 
-.cb-info-icon {
-	color: blue; /*var(--cb-popup-bg);*/
-	background-color: red; /*var (--cb-popup-fg);*/.
-	font-size: 16px;
-	border: none;
-	border-radius: 8px;
+#noticeSpinner {
+  font-size: 0.9em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
 }
-
-.cb-tip-link {
-	color: white;
-}
-
-/*----- tooltip CSS from w3schools: https://www.w3schools.com/css/css_tooltip.asp */
-/* Tooltip container */
-.tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted var(--cb-popup-fg); /* If you want dots under the hoverable text */
-}
-
-/* Tooltip text */
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 500px;
-    background-color: var(--cb-popup-fg);;
-    color: #fff;
-    text-align: left;
-    padding: 5px 0;
-    border-radius: 6px;
- 
-    /* Position the tooltip text - see examples below! */
-    position: absolute;
-    z-index: 1;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-}
-/*----- end of tooltip -----*/
-
-
-/*----- slider button CSS based on w3schools: https://www.w3schools.com/howto/howto_css_switch.asp */
-.cb-slider-container {
-	float: right;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 24px;
-  height: 13px;
-  top: 2px;
-}
-
-.switch input {display:none;}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--cb-popup-fg);
-  border: 1px solid var(--cb-popup-bg);
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 9px;
-  width: 9px;
-  left: 1px;
-  bottom: 1px;
-  background-color: var(--cb-popup-bg);
-  -webkit-transition: .1s;
-  transition: .1s;
-}
-
-input:checked + .slider {
-  background-color: var(--cb-popup-fg);
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(11px);
-  -ms-transform: translateX(11px);
-  transform: translateX(11px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 17px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-/*----- end of slider button ----*/
+/*-- end of standard notice and error --*/

@@ -1,115 +1,143 @@
-.sc-colorscheme {
-  --MV-white: #ffffff;
-  --MV-black: #000000;
-  --MV-light-teal: #2f8d98;
-  --MV-dark-teal: #115e63;
-  --MV-deep-teal: #093c44;
-  --MV-green: #b5cd34;
-  --MV-orange: #f7941e;
-  --MV-light-gray: #6d6e71;
-  --MV-dark-gray: #414042;
-  --light-gray2: #f2f2f2;
-  --very-light-gray: #dddddd;
-}
-
 body {
-	color: var(--MV-black);
-	background-color: var(--very-light-gray);
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: black;
+	background-color: #eee;
+	font-family: "Segoe UI", Tahoma, Arial, sans-serif;
 	font-size: 13px;
-	margin-left: 12px;
-	margin-right: 12px;
+	margin-left: 0.2em;
+  margin-top: 0.2em;
 }
 
 .title {
-  font-size: 14px;
-  color: var(--MV-white);
-  background-color: var(--MV-dark-teal);
-  border: 1px solid var(--MV-black);
-  border-radius: 6px;
-  padding-left: 4px;
-  margin-bottom: 10px;  
+  font-size: 1.0em;
+  color: white;
+  background-color: #426296;
+  border: none;
+  border-radius: 6px 6px 0px 0px;
+  padding: 0.4em 0.4em 0.2em 0.2em;
+  margin-bottom: 0.6em;
+  max-width: 47em;
 }
 
-
-td.label {
-  padding-bottom: 10px;
+#logo {
+  width: 1.4em;
 }
 
-textarea {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 12px;
+#titleText {
+  display: inline-block;
+  vertical-align: text-bottom;
+  padding: 0.2em;  
 }
 
-span.noneditable, div.noneditable {
-  background-color: var(--very-light-gray);
-  border: 1px solid var(--MV-light-gray);
-  font-size: 12px;  
+#saveButton {
+  font-size: 0.9em;
+  color: #426296;
+  background-color: white;
+  border: none;
+  border-radius: 4px;
+  float: right;
+  margin-top: 0.2em;
 }
 
-span.noneditable, div.noneditable {
-  padding-right: 4px;
-  padding-left: 4px;
+#saveButton:disabled {
+  color: #eee;
+  background-color: #aaa;
+} 
+
+.content-section {
+  margin-bottom: 0.8em;
+  margin-left: 0.3em;
+  font-size: 0.9em;
 }
 
-span.noneditable {
-  padding-top: 4px;
-  padding-bottom: 4px;   
-}  
-
-td.label {
+.label {
+  display: inline-block;
+  min-width: 7em;
   vertical-align: top;
 }
 
+.comment-icon {
+  color: #5075b2;
+  font-size: 1.2em;
+  padding-left: 0.2em;
+  vertical-align: bottom;
+}
+
 .user-input {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 0.9em;
+  width: 50em;
 }
 
-.control-button {
-	color: var(--MV-white);
-	background-color: var(--MV-dark-teal);
-	border: 1px solid var(--MV-black);
-	border-radius: 6px;  
+#commentInput {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 0.9em;
 }
 
-.control-button-small {
-  font-size: 11px;
-}
-
-span.status {
-  color: blue;
-  font-size: 12px;
-  font-weight: bold;
-  font-style: italic;
-}
-
-div.reference {
-  font-size: 12px;
-}
-
-.show-me {
-  display: block;
-}
-
-.hide-me {
+#referenceSection {
   display: none;
 }
 
-table.table-borders {
+#showSampleComments {}
+#hideSampleComments { display: none; }
+
+#previewOutput {
+  display: inline-block;
+  background-color: #ddd;
+  border: 1px solid #ccc;
+  width: 50.0em;
+  font-size: 0.9em;
+}
+
+#referenceContainer {
+  display: inline-block;
+}
+
+table {
   border-collapse: collapse;
 }
 
-table.table-borders, tr.table-borders, td.table-borders, th.table-borders {
-  border: 1px solid var(--MV-black);
+table, th, td {
+  border: 1px solid #ccc;
+  font-size: 0.9em;
 }
 
-th.table-borders {
-	color: var(--MV-white);
-	background-color: var(--MV-dark-teal);
-}  
-
-p, ul, ol {
-  margin-top: 3px;
-  margin-bottom: 3px;
+th {
+  text-align: left;
+  color: white;
+  background-color: #5075b2;
 }
+
+td, th {
+  vertical-align: top;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+}
+
+td {
+  background-color: white;
+}
+
+/*-- standard error and notice tools --*/
+.standard_error {
+  display: none;
+  font-style: italic;
+  color: blue;
+  margin-bottom: 0.4em;;
+}
+
+.standard-notice {
+ /* float: right;  */
+  display: inline-block;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-left: 2.0em;
+  margin-right: 0.2em;
+}
+
+#noticeSpinner {
+  display: none;
+  font-size: 0.9em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+}
+/*-- end of standard notice and error --*/

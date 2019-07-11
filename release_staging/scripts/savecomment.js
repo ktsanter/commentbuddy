@@ -1,494 +1,307 @@
-//
-// TODO: add MarkDown quick reference link or popup
-//
+//-----------------------------------------------------------------------------------
+// CommentBuddy Chrome extension save comment support page
+//-----------------------------------------------------------------------------------
+// TODO:
+//-----------------------------------------------------------------------------------
 
 const app = function () {
-  const PAGE_TITLE = 'Store new entry in CommentBuddy repository';
-  
-  const UP_ARROW = '&#9650;'; //'&#11181;';
-  const DOWN_ARROW = '&#9660;'; //'&#11183;';
+  const PAGE_TITLE = 'Compose new comment';
   
   const page = {};
   
   const settings = {};
   
+  const storageKeys = {
+    sheetid: 'cb2_fileid',
+    sheeturl: 'cb2_fileurl',
+    savecommenttext: 'cb2_savecommenttext'
+  };
+  
+  const apiInfo = {
+    apibase: 'https://script.google.com/macros/s/AKfycbxgZL5JLJhR-6jWqbxb3s7aWG5aqkb-EDENYyIdnBT4vVpKHq8/exec',
+    apikey: 'MV_commentbuddy2'
+  };
+  
+  var markdownReferenceItems = [
+    '*italics*',
+    '**bold**',
+    '%%highlight%%',
+    '~~strikethrough~~',
+    'x^^2^^\n\nx^^^i^^^',
+    'this is an `inline code` example',
+    '- first item\n\n- second item',
+    '1. first item\n\n2. second item',
+    'an [inline link](https://www.google.com "go to google.com")',
+    '![alt text](http://bit.ly/2D1Hodh "I am a smiley face")',
+    '# this is H1\n\n## this is H2\n\n### this is H3\n\n#### this is H4\n\n##### this is H5'
+  ];
+  
+  const defaultPreviewText = '<span style="color: #777; font-style: italic">preview of formatted comment</span>';
+    
   //---------------------------------------
   // get things going
   //----------------------------------------
   function init () {
     page.body = document.getElementsByTagName('body')[0];
-    page.contents = document.getElementById('contents');
-    
-    _retrieveSettings(_renderPage);
+    _loadStoredValues();
   }
   
-  function _retrieveSettings(callback)
-  {
-    chrome.storage.sync.get(['cbSpreadsheetFileId', 'cbCommentText'], function(result) {
-      var fileIdString = '';
-      var newCommentText = '';
+  function _loadStoredValues() {
+    var loadparams = [
+      {key: storageKeys.sheetid, resultfield: 'spreadsheetid', defaultval: null},
+      {key: storageKeys.sheeturl, resultfield: 'spreadsheetlink', defaultval: null},
+      {key: storageKeys.savecommenttext, resultfield: 'savecommenttext', defaultval: ''}
+    ];
+    
+    var localtesting = false;
+    if (localtesting) {
+      console.log('local testing: storage sync values not retrieved');
+      loadresult = {
+        spreadsheetid: '1mo3e7xJdOYO4pVZ_6SrRlpROkuIgh_G0M4llM78olvM',
+        spreadsheetlink: 'https://drive.google.com/open?id=1mo3e7xJdOYO4pVZ_6SrRlpROkuIgh_G0M4llM78olvM',
+        savecommenttext: 'some text'
+      };
+      _finishLoad(loadresult);
 
-      if (typeof result.cbSpreadsheetFileId != 'undefined') {
-        fileIdString = result.cbSpreadsheetFileId;
-      }
-      if (typeof result.cbCommentText != 'undefined') {
-        newCommentText = _sanitizeComment(result.cbCommentText);
-      }
-      
-      settings.fileid = fileIdString;
-      settings.newcommenttext = newCommentText;
-
-      callback();
-    });
+    } else {
+      new ChromeSyncStorage().load(loadparams, function(result) {
+        _finishLoad(result);
+      });    
+    }
   }
   
-  function _sanitizeComment(orig) {
-    var sanitized = orig.replace(/[\u00A0]/g,' ');  // nbsp character
+  function _finishLoad(loadresult) {
+    for (var key in loadresult) {
+      settings[key] = loadresult[key];
+    }
     
-    return sanitized;
+    page.body.appendChild(_renderPage());
+    document.getElementById('commentInput').value = settings.savecommenttext;
+    _renderPreviewComment();
   }
   
   //-----------------------------------------------------------------------------
   // page rendering
   //-----------------------------------------------------------------------------  
   function _renderPage() {
-    page.contents.appendChild(_renderTitle());
-    if (settings.fileid == '' || settings.fileid == null) {
-      _renderError('The spreadsheet file ID has not been sent for CommentBuddy yet.<br>Please use the configure option in CB to set it first.')
-      
+    var contents = CreateElement.createDiv('contents', null);
+    
+    var title = _renderTitle();
+    contents.appendChild(title);
+    page.notice = new StandardNotice(page.body, title);
+    
+    if (settings.spreadsheetid == '' || settings.spreadsheetid == null) {
+      contents.appendChild(CreateElement.createDiv(null, null, 'The spreadsheet file ID has not been set for CommentBuddy yet.<br>Please use the configure option in CB to set it first.'));
     } else {
-      page.contents.appendChild(_renderContent());
-      _addHandlers();
+      contents.appendChild(_renderContent());
     }
-  }
-  
-  function _renderError(msg) {
-    page.contents.innerHTML = msg;    
+    
+    return contents;
   }
   
   function _renderTitle() {
-    var elemContainer = document.createElement('div');
-    elemContainer.classList.add('title');
-    elemContainer.innerHTML = PAGE_TITLE;
+    var title = CreateElement.createDiv(null, 'title');
     
-    return elemContainer;
+    title.appendChild(CreateElement.createImage('logo', null, 'cb2_logo_inverted_128.png'));
+    title.appendChild(CreateElement.createDiv('titleText', null, 'Compose new comment'));
+    
+    title.appendChild(CreateElement.createButton('saveButton', null, 'save', 'save comment in repository', _handleSaveButton));
+    
+    return title;
   }
     
   function _renderContent() {
-    var elemContainer = document.createElement('div');
-    
-    var elemTable = document.createElement('table');
-    elemTable.appendChild(_renderFileId());
-    elemTable.appendChild(_renderTags());
-    elemTable.appendChild(_renderNewComment());
-    elemTable.appendChild(_renderCommentPreview());
-    elemTable.appendChild(_renderHoverText());
-    elemTable.appendChild(_renderControls());
-    
-    elemContainer.appendChild(elemTable);
-    return elemContainer;
+    var container = CreateElement.createDiv(null, null);
+
+    container.appendChild(_renderRepositoryLink()); 
+    container.appendChild(_renderTagSection());
+    container.appendChild(_renderHoverTextSection());
+    container.appendChild(_renderCommentSection());
+    container.appendChild(_renderPreviewSection());
+    container.appendChild(_renderFormattingReference());
+
+    return container;
   }
   
-  function _renderFileId() {
-    var elemContainer = document.createElement('tr');   
-    var elemCell1 = document.createElement('td');
-    var elemCell2 = document.createElement('td');
+  function _renderRepositoryLink() {
+    var container = CreateElement.createDiv(null, 'content-section');
     
-    elemCell1.classList.add('label');
+    container.appendChild(CreateElement.createDiv(null, 'label', 'repository'));
     
-    var elemLabel = document.createElement('span');
-    elemLabel.innerHTML = 'spreadsheet ID ';
-    elemLabel.title = 'file ID for Google Sheet use to store comment data';
-    elemCell1.appendChild(elemLabel);
+    var repoLink = CreateElement.createLink(null, null, 'open comment repository', 'open comment repository spreadsheet', settings.spreadsheetlink);
+    container.appendChild(repoLink);
+    repoLink.target = '_blank';
     
-    var elemLink = document.createElement('a');
-    elemLink.href = 'https://drive.google.com/open?id=' + settings.fileid;
-    elemLink.target = '_blank';
-    elemLink.title = 'open comment repository spreadsheet';
-    elemLink.innerHTML = settings.fileid;
-    elemCell2.appendChild(elemLink);
-    
-    elemContainer.appendChild(elemCell1);
-    elemContainer.appendChild(elemCell2);
-    
-    return elemContainer;
+    return container;
   }
   
-  function _renderTags() {
-    var elemContainer = document.createElement('tr');   
-    var elemCell1 = document.createElement('td');
-    var elemCell2 = document.createElement('td');
+  function _renderTagSection() {
+    var container = CreateElement.createDiv(null, 'content-section');
     
-    elemCell1.classList.add('label');
+    container.appendChild(CreateElement.createDiv(null, 'label', 'tags'));
+    
+    var tagInput = CreateElement.createTextInput('tagInput', 'user-input');
+    container.appendChild(tagInput);
+    tagInput.maxlength = 200;
+    tagInput.placeholder = 'tag1, tag2, ...';
+    tagInput.title = 'one or more tags for looking up comment';
+    tagInput.addEventListener('input', _handleTagInputChange, false)
+    
+    return container;
+  }
+    
+  function _renderHoverTextSection() {
+    var container = CreateElement.createDiv(null, 'content-section');
 
-    var elemLabel = document.createElement('span');
-    elemLabel.innerHTML = 'tags';
-    elemLabel.title = 'one or more tags for looking up comment - use no spaces in tag names and commas to separate them';
-    elemCell1.appendChild(elemLabel);
-
-    var elemVal = document.createElement('input');
-    elemVal.type = 'text'
-    elemVal.classList.add('user-input');
-    elemVal.style.width = '100%';
-    elemVal.maxlength = 200;
-    elemVal.placeholder = 'tag1, tag2, ...';
-    elemCell2.appendChild(elemVal);
-    
-    elemContainer.appendChild(elemCell1);
-    elemContainer.appendChild(elemCell2);
-    
-    page.tags = elemVal;
-    
-    return elemContainer;
+    container.appendChild(CreateElement.createDiv(null, 'label', 'hover text'));
+  
+    var hovertextInput = CreateElement.createTextInput('hovertextInput', 'user-input');
+    container.appendChild(hovertextInput);
+    hovertextInput.maxlength = 200;
+    hovertextInput.placeholder = 'optional hover text...';
+    hovertextInput.title = 'hover text displayed when selecting in CommentBuddy (optional)';
+    hovertextInput.addEventListener('input', _handleHovertextInputChange, false)
+   
+    return container;
   }
   
-  function _renderHoverText() {
-    var elemContainer = document.createElement('tr');   
-    var elemCell1 = document.createElement('td');
-    var elemCell2 = document.createElement('td');
+  function _renderCommentSection() {
+    var container = CreateElement.createDiv(null, 'content-section');
     
-    elemCell1.classList.add('label');
-
-    var elemLabel = document.createElement('span');
-    elemLabel.innerHTML = 'hover text';
-    elemLabel.title = 'hover text displayed when selecting in CommentBuddy';
-    elemCell1.appendChild(elemLabel);
-
-    var elemVal = document.createElement('input');
-    elemVal.type = 'text';
-    elemVal.classList.add('user-input');
-    elemVal.style.width = '100%';
-    elemVal.maxlength = 200;
-    elemVal.placeholder = 'optional hover text...';
-    elemVal.innerHTML = settings.hovertext;
-    elemCell2.appendChild(elemVal);
+    var commentLabel = CreateElement.createDiv(null, 'label', 'comment');
+    container.appendChild(commentLabel);
+    commentLabel.appendChild(CreateElement.createIcon('showSampleComments', 'comment-icon fas fa-caret-square-down', 'show formatting reference info', _handleShowSampleComments));
+    commentLabel.appendChild(CreateElement.createIcon('hideSampleComments', 'comment-icon fas fa-caret-square-up', 'show formatting reference info', _handleHideSampleComments));
     
-    elemContainer.appendChild(elemCell1);
-    elemContainer.appendChild(elemCell2);
+//    commentLabel.appendChild(CreateElement.createBR());
     
-    page.hovertext = elemVal;
-    
-    return elemContainer;
-  }
-  
-  function _renderNewComment() {
-    var elemContainer = document.createElement('tr');   
-    var elemCell1 = document.createElement('td');
-    var elemCell2 = document.createElement('td');
-
-    elemCell1.classList.add('label');
-
-    var elemLabel = document.createElement('span');
-    var elemLabel = document.createElement('span');
-    elemLabel.innerHTML = 'new comment ';
-    elemLabel.title = 'text for new comment (before formatting)';
-    elemCell1.appendChild(elemLabel);
-
-    var elemButton = document.createElement('button');
-    elemButton.classList.add('control-button');
-    elemButton.classList.add('control-button-small');
-    elemButton.innerHTML =  DOWN_ARROW;
-    elemButton.title = 'show formatting reference info';
-    elemCell1.appendChild(elemButton);
-    
-    var elemVal = document.createElement('textarea');
-    elemVal.rows = 14;
-    elemVal.cols = 80;
-    elemVal.innerHTML = settings.newcommenttext;
-    elemCell2.appendChild(elemVal);
-    
-    var elemMarkdownReference = _renderMarkdownReference();
-    elemCell2.appendChild(elemMarkdownReference);
-
-    elemContainer.appendChild(elemCell1);
-    elemContainer.appendChild(elemCell2);
+    var commentTextArea = CreateElement.createTextArea('commentInput', null);
+    container.appendChild(commentTextArea);
+    commentTextArea.rows = 14;
+    commentTextArea.cols = 101;
+    commentTextArea.addEventListener('input', _handleCommentInputChange, false)
         
-    page.mdrefbutton = elemButton;
-    page.markdownreference = elemMarkdownReference;
-    page.newcomment = elemVal;
-    
-    return elemContainer;
-  }
-
-  function _renderCommentPreview() {
-    var elemContainer = document.createElement('tr');   
-    var elemCell1 = document.createElement('td');
-    var elemCell2 = document.createElement('td');
-
-    elemCell1.classList.add('label');
-
-    var elemLabel = document.createElement('span');
-    var elemLabel = document.createElement('span');
-    elemLabel.innerHTML = 'preview ';
-    elemLabel.title = 'comment after formatting';
-    elemCell1.appendChild(elemLabel);
-    
-    var elemVal = document.createElement('div');
-    elemVal.classList.add('noneditable');
-    _previewComment(elemVal, settings.newcommenttext);
-    elemCell2.appendChild(elemVal);
-    
-    elemContainer.appendChild(elemCell1);
-    elemContainer.appendChild(elemCell2);
-    
-    page.previewcomment = elemVal;
-    
-    return elemContainer;
+    return container;
   }
   
-  function _renderControls() {
-    var elemContainer = document.createElement('tr');
+  function _renderPreviewSection() {
+    var container = CreateElement.createDiv(null, 'content-section');
     
-    var elemCell1 = document.createElement('td');
-    var elemCell2 = document.createElement('td');
+    container.appendChild(CreateElement.createDiv(null, 'label', 'preview'));
     
-    var elemButton = document.createElement('button');
-    elemButton.classList.add('control-button');
-    elemButton.innerHTML = 'save';
-    elemButton.title = 'save comment in repository';
-    elemCell1.appendChild(elemButton);
+    container.appendChild(CreateElement.createDiv('previewOutput', null, defaultPreviewText));
     
-    var elemStatus = document.createElement('span');
-    elemStatus.classList.add('status');
-    elemStatus.innerHTML = '';
-    elemCell2.appendChild(elemStatus);
-        
-    elemContainer.appendChild(elemCell1);
-    elemContainer.appendChild(elemCell2);
-    
-    page.savebutton = elemButton;
-    page.statusmsg = elemStatus;
-    
-    return elemContainer;
+    return container;
   }
-  
-  function _renderMarkdownReference() {
-    var markdownItems = [
-      '*italics*',
-      '**bold**',
-      '%%highlight%%',
-      '~~strikethrough~~',
-      'x^^2^^\n\nx^^^i^^^',
-      'this is an `inline code` example',
-      '- first item\n\n- second item',
-      '1. first item\n\n2. second item',
-      'an [inline link](https://www.google.com "go to google.com")',
-      '![alt text](http://bit.ly/2D1Hodh "I am a smiley face")',
-      '# this is H1\n\n## this is H2\n\n### this is H3\n\n#### this is H4\n\n##### this is H5'
-    ];
-    var elemContainer = document.createElement('div');
+
+  function _renderFormattingReference() {
+    var container = CreateElement.createDiv('referenceSection', 'content-section');
     
-    elemContainer.classList.add('reference');
-    elemContainer.classList.add('hide-me');
+    container.appendChild(CreateElement.createDiv(null, 'label', 'reference'));
     
-    var elemTable = document.createElement('table');
-    elemTable.classList.add('table-borders');
+    var tableContainer = CreateElement.createDiv('referenceContainer', null);
+    container.appendChild(tableContainer);
     
-    var elemHeaderRow = document.createElement('tr');
-    var elemHeaderCell1 = document.createElement('th');
-    var elemHeaderCell2 = document.createElement('th');
-    elemHeaderCell1.classList.add('table-borders');
-    elemHeaderCell2.classList.add('table-borders');
-    elemHeaderCell1.innerHTML = 'unformatted';
-    elemHeaderCell2.innerHTML = 'formatted';
-    elemHeaderRow.appendChild(elemHeaderCell1);
-    elemHeaderRow.appendChild(elemHeaderCell2);
-    elemTable.appendChild(elemHeaderRow);
+    var table = CreateElement.createTable(null, null);
+    tableContainer.appendChild(table);
     
-    for (var i = 0; i < markdownItems.length; i++) {
-      elemTable.appendChild(_renderMarkdownReferenceItem(markdownItems[i]));
+    var thead = CreateElement._createElement('thead', null, null);
+    table.appendChild(thead);
+    var row = CreateElement.createTableRow(null, null, thead)
+    CreateElement.createTableCell(null, null, 'unformatted', true, row);
+    CreateElement.createTableCell(null, null, 'formatted', true, row);
+    
+    var tbody = CreateElement._createElement('tbody', null, null);
+    table.appendChild(tbody);
+    for (var i = 0; i < markdownReferenceItems.length; i++) {
+      var item = markdownReferenceItems[i];
+      row = CreateElement.createTableRow(null, null, tbody);
+      CreateElement.createTableCell(null, null, item, false, row);
+      CreateElement.createTableCell(null, null, MarkdownToHTML.convert(item), false, row);
     }
-    elemContainer.appendChild(elemTable);
-    
-    return elemContainer;
-  }
-  
-  function _renderMarkdownReferenceItem(unformatted) {
-    var elemRow = document.createElement('tr');
-    var elemUnformatted = document.createElement('td');
-    var elemFormatted = document.createElement('td');
-    
-    elemUnformatted.classList.add('table-borders');
-    elemFormatted.classList.add('table-borders');
-    
-    elemUnformatted.innerHTML = unformatted.replace(/\n\n/g, '<br>');
-    elemFormatted.innerHTML = _markdownToHTML(unformatted);
-    
-    elemRow.appendChild(elemUnformatted);
-    elemRow.appendChild(elemFormatted);
-    
-    return elemRow;
-  }
-  
-  function _addHandlers() {
-    page.tags.addEventListener('input', _handleTagsChange, false);
-    page.newcomment.addEventListener('input', _handleCommentChange, false);
-    page.mdrefbutton.addEventListener('click', _handleMarkdownRefClick, false);
-    page.hovertext.addEventListener('input', _handleHoverTextChange, false);
-    page.savebutton.addEventListener('click', _handleSaveClick, false);
+      
+    return container;
   }
 
   //------------------------------------------------------------------
   // UI routines
   //------------------------------------------------------------------
-  function _previewComment(elem, commentText) {
-    elem.innerHTML = _markdownToHTML(commentText);
-  }
-  
-  function _saveComment() {
-    page.savebutton.disabled = true;
-    _setStatusMessage('saving comment...');
-    _putNewComment(settings.fileid, page.tags.value, page.newcomment.value, page.hovertext.value, _saveComplete);
-  }
-  
-  function _saveComplete(result) {
-    if (result.success) {
-      console.log('save success');
-      page.statusmsg.innerHTML = 'comment saved successfully';
-    } else {
-      console.log('save fail');
-      page.statusmsg.innerHTML = 'comment save failed: ' + result.err;
-    }
-    page.savebutton.disabled = false;
-  }
-  
-  function _setStatusMessage(msg) {
-    page.statusmsg.innerHTML = msg;
-  }
-  
-  function _clearStatusMessage() {
-    page.statusmsg.innerHTML = '';
-  }
-  
-  function _toggleMarkdownRefVisibility() {
-    var elem = page.markdownreference;
+  function _renderPreviewComment() {
+    var commentInput = document.getElementById('commentInput');
+    var previewOutput = document.getElementById('previewOutput');
     
-    if (elem.classList.contains('hide-me')) {
-      elem.classList.remove('hide-me');
-      elem.classList.add('show-me');
-      page.mdrefbutton.innerHTML = UP_ARROW;
-      page.mdrefbutton.title = 'hide formatting reference info';
-      
-    } else if (elem.classList.contains('show-me')) {
-      elem.classList.remove('show-me');
-      elem.classList.add('hide-me');
-      page.mdrefbutton.innerHTML = DOWN_ARROW;
-      page.mdrefbutton.title = 'show formatting reference info';
+    var commentText = commentInput.value;
+    if (commentText == '') commentText = defaultPreviewText;
+    
+    previewOutput.innerHTML = MarkdownToHTML.convert(commentText);
+  }
+    
+  function _setFormattingSectionVisibility(setVisible) {
+    var showbutton = document.getElementById('showSampleComments');
+    var hidebutton = document.getElementById('hideSampleComments');
+    var referencesection = document.getElementById('referenceSection');
+    
+    if (setVisible) {
+      showbutton.style.display = 'none';
+      hidebutton.style.display = 'inline-block';
+      referencesection.style.display = 'block';
+    } else {
+      showbutton.style.display = 'inline-block';
+      hidebutton.style.display = 'none';
+      referencesection.style.display = 'none';
     }
   }
   
   //------------------------------------------------------------------
   // handlers
   //------------------------------------------------------------------
-  function _handleCommentChange(e) {
-    _clearStatusMessage();
-    _previewComment(page.previewcomment, e.target.value);
+  function _handleTagInputChange() {
+    page.notice.setNotice('');
   }
   
-  function _handleSaveClick(e) {
-    _saveComment();
+  function _handleCommentInputChange() {
+    page.notice.setNotice('');
+    _renderPreviewComment();
+  }
+
+  function _handleHovertextInputChange() {
+    page.notice.setNotice('');
   }
   
-  function _handleTagsChange(e) {
-    _clearStatusMessage();
+  function _handleShowSampleComments() {
+    _setFormattingSectionVisibility(true);
+  }
+
+  function _handleHideSampleComments() {
+    _setFormattingSectionVisibility(false);
   }
   
-  function _handleHoverTextChange(e) {
-    _clearStatusMessage();
-  }
-  
-  function _handleMarkdownRefClick(e) {
-    _toggleMarkdownRefVisibility();
-  }
-  
-  //------------------------------------------------------------------
-  // MarkDown to HTML (alternative version with slightly less functionality)
-  //------------------------------------------------------------------
-  function _markdownToHTML(text) {
-    var highlightspan = "<span style=\"background-color: #FFFF00\">";
-    var highlightendspan = '</span>';
-    
-    var reader = new commonmark.Parser();
-    var writer = new commonmark.HtmlRenderer();
-
-    var parsed = reader.parse(text);  // tree now available for walking
-
-    var result = writer.render(parsed);
-
-    result = _extraMarkdownReplaceAll(result, /\^\^\^[^^]*\^\^\^/g, 3, '<sub>', '</sub>'); 
-    result = _extraMarkdownReplaceAll(result, /\^\^[^^]*\^\^/g, 2, '<sup>', '</sup>'); 
-    result = _extraMarkdownReplaceAll(result, /\~\~[^~]*\~\~/g, 2, '<s>', '</s>'); 
-    result = _extraMarkdownReplaceAll(result, /\%\%[^%]*\%\%/g, 2, highlightspan, highlightendspan);
-    
-    result = result.replaceAll('&amp;amp;', '&');
-
-    return result;
-  }
-
-  String.prototype.replaceAll = function(search, replacement) {
-      var target = this;
-      return target.split(search).join(replacement);
-  };
-
-  function _extraMarkdownReplaceAll(originalString, pattern, patternlength, opentoken, closetoken)
-  {
-    var s = originalString;
-
-    var result = s.match(pattern);
-    if (result !== null) {
-      for (var i = 0; i < result.length; i++) {
-        s = s.replace(result[i], opentoken + result[i].slice(patternlength, -patternlength) + closetoken);
-      }
-    }
-
-    return s;
+  function _handleSaveButton() {
+    _saveNewComment();
   }
   
   //--------------------------------------------------------------
   // use Google Sheet web API to save new comment
   //--------------------------------------------------------------
-  const API_BASE = 'https://script.google.com/a/mivu.org/macros/s/AKfycbzslpRyJsncJoufxogGhjSHB5bnQov_2flD3hPDryYNCHnH-VkX/exec';
-  const API_KEY = 'MVcommentbuddyAPI';
-  
-  function _putNewComment (fileid, tags, comment, hovertext, callback) {
-    //console.log('posting new comment...');
-
-    var postData = {
-      "destfileid": fileid,
-      "tags": tags,
-      "comment": comment,
-      "hovertext": hovertext
-    };
+  async function _saveNewComment() {
+    document.getElementById('saveButton').disabled = true;
     
-    fetch(_buildApiUrl('comment'), {
-        method: 'post',
-        contentType: 'application/x-www-form-urlencoded',
-        body: JSON.stringify(postData)
-      })
-      .then((response) => response.json())
-      .then((json) => callback({"success": true}))
-      .catch((error) => {
-        callback({"success": false, "err": error});
-        console.log(error);
-      })
-  }
+    page.notice.setNotice('saving comment...', true);
 
-  function _buildApiUrl (datasetname, params) {
-    let url = API_BASE;
-    url += '?key=' + API_KEY;
-    url += datasetname && datasetname !== null ? '&dataset=' + datasetname : '';
-
-    for (var param in params) {
-      url += '&' + param + '=' + params[param].replace(/ /g, '%20');
+    var postParams = {
+      sourcefileid: settings.spreadsheetid,
+      tags: document.getElementById('tagInput').value,
+      comment: document.getElementById('commentInput').value,
+      hovertext: document.getElementById('hovertextInput').value
     }
 
-    //console.log('buildApiUrl: url=' + url);
-    
-    return url;
+    var requestResult = await googleSheetWebAPI.webAppPost(apiInfo, 'newcomment', postParams, page.notice);
+    if (requestResult.success) {
+      page.notice.setNotice('copy succeeded', false);
+    }
+
+    document.getElementById('saveButton').disabled = false;
   }
-  //---------------------------------------
-  // utility functions
-  //----------------------------------------
 
   //---------------------------------------
   // return from init
@@ -497,5 +310,3 @@ const app = function () {
     init: init
    };
 }();
-
-document.addEventListener('DOMContentLoaded', app.init());
