@@ -7,7 +7,7 @@
   
   "description": "CommentBuddy",
   
-  "version": "2.03",
+  "version": "2.05",
   
   "browser_action": {
     "default_icon": "cb2_logo_16.png",

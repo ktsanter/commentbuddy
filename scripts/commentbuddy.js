@@ -305,6 +305,7 @@ class CommentBuddy {
   }
   
   _makeTagArray(tagtext) {
+    tagtext = tagtext.toString();
     var tagarray = tagtext.split(',');
     for (var i = 0; i < tagarray.length; i++) {
       tagarray[i] = tagarray[i].trim();

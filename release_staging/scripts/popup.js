@@ -188,6 +188,7 @@ const app = function () {
     if (settings.initialized) {
       container.appendChild(CreateElement.createIcon(null, 'fas fa-times reconfigure-icon', 'discard changes', _cancelReconfigure));
     }
+    container.appendChild(CreateElement.createIcon(null, 'fas fa-question reconfigure-icon', 'help', _showHelp));
 
     container = CreateElement.createDiv(null, 'reconfigure-item');
     page.reconfigureUI.appendChild(container);
@@ -197,23 +198,31 @@ const app = function () {
     configinput.title = 'enter shared link for CommentBuddy repository spreadsheet';
   }
   
-  function _endReconfigure(saveNewConfiguration) { 
+  async function _endReconfigure(saveNewConfiguration) { 
     if (saveNewConfiguration) {
       var userEntry = document.getElementById('spreadsheetLink').value;
 
       var sID = userEntry.match(/\?id=([a-zA-Z0-9-_]+)/);
-      if (sID == null) {
-        sID = '';
-      } else {
+      if (sID != null) {
         sID = sID[0].slice(4);
+      } else {
+        sID = userEntry.match(/\/([a-zA-Z0-9-_]+)\/edit\?usp/);
+        if (sID != null) {
+          sID = sID[0].slice(1, -9);
+        } else {
+          sID = '';
+        }
       }
 
-      settings.configparams.spreadsheetlink = userEntry;
-      settings.configparams.spreadsheetid = sID;
-      _storeConfigurationParameters();
-      _configureAndRender();
-      page.body.removeChild(page.reconfigureUI);
-      page.reconfigureUI = null;
+      var dataSourceIsValid = await _validateDataSource(sID);
+      if (dataSourceIsValid) {
+        settings.configparams.spreadsheetlink = userEntry;
+        settings.configparams.spreadsheetid = sID;
+        _storeConfigurationParameters();
+        _configureAndRender();
+        page.body.removeChild(page.reconfigureUI);
+        page.reconfigureUI = null;
+      }
       
     } else {
       page.body.removeChild(page.reconfigureUI);
@@ -222,6 +231,22 @@ const app = function () {
     }
     
     page.body.style.height = '44em';
+  }
+
+  async function _validateDataSource(spreadsheetid) {
+    page.notice.setNotice('validating data source...');
+    var requestResult  = await googleSheetWebAPI.webAppGet(
+      apiInfo, 'validate', 
+      {commentbuddy_spreadsheetid: spreadsheetid}
+    );
+    
+    if (requestResult.sucess) {
+      page.notice.setNotice('');
+    } else {
+      page.notice.setNotice(requestResult.details);
+    }
+      
+    return requestResult.success;
   }
   
   function _storeConfigurationParameters() {

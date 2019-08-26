@@ -1,4 +1,4 @@
-time is 07/11/2019 10:26:47.92 
+time is 08/26/2019 13:35:38.59 
 C:help.html
 C:index.html
 C:popup.html
@@ -47,15 +47,15 @@ scripts\standard_notice.js
 7-Zip 18.01 (x64) : Copyright (c) 1999-2018 Igor Pavlov : 2018-01-28
 
 Scanning the drive:
-2 folders, 38 files, 421142 bytes (412 KiB)
+2 folders, 38 files, 422034 bytes (413 KiB)
 
-Creating archive: ..\cb_release_2.03.zip
+Creating archive: ..\cb_release_2.05.zip
 
-Add new data to archive: 2 folders, 38 files, 421142 bytes (412 KiB)
+Add new data to archive: 2 folders, 38 files, 422034 bytes (413 KiB)
 
 
 Files read from disk: 38
-Archive size: 151442 bytes (148 KiB)
+Archive size: 151615 bytes (149 KiB)
 Everything is Ok
 release package for "CommentBuddy" is complete 
-release file name: cb_release_2.03.zip 
+release file name: cb_release_2.05.zip 
